@@ -1,6 +1,5 @@
 package com.example.pokedex.ui.component.pokemoncard
 
-import PokemonTypeRow
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
