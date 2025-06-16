@@ -2,6 +2,7 @@ package com.example.pokedex.data
 
 import android.content.Context
 import com.example.pokedex.model.PokemonDetail
+import com.example.pokedex.util.PokemonUtils.MAX_POKEMON_ID
 import kotlin.random.Random
 
 /**
@@ -23,12 +24,6 @@ class PokemonService(
         return getPokemonDetail(id)
     }
 
-    /**
-     * Fetches the full Pokémon detail including sprite, type info, and flavor text.
-     *
-     * @param id The Pokédex ID of the Pokémon.
-     * @return A fully populated [PokemonDetail] model.
-     */
     override suspend fun getPokemonDetail(id: Int): PokemonDetail {
         val (pokemon, entry) = repository.getPokemonWithEntry(id)
             ?: error("Pokémon with ID $id not found")
@@ -51,9 +46,5 @@ class PokemonService(
 
     override suspend fun setFavorite(context: Context, id: Int, isFavorite: Boolean) {
         favoritesManager.setFavorite(context, id, isFavorite)
-    }
-
-    companion object {
-        private const val MAX_POKEMON_ID = 1025
     }
 }

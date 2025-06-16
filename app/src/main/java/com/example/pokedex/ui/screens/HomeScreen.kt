@@ -17,6 +17,7 @@ import com.example.pokedex.data.PokemonRepository
 import com.example.pokedex.data.PokemonService
 import com.example.pokedex.model.PokemonDetail
 import com.example.pokedex.ui.component.pokemoncard.PokemonCard
+import com.example.pokedex.util.PokemonUtils.MAX_POKEMON_ID
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
@@ -26,75 +27,72 @@ fun HomeScreen() {
     val coroutineScope = rememberCoroutineScope()
 
     val startId = 1
-    val endId = 151
+    val endId = MAX_POKEMON_ID
 
     val repository: IPokemonRepository = PokemonRepository()
     val service = PokemonService(repository, FavoritesManager)
 
-    // Initial random ID
     val initialId = remember { Random.nextInt(startId, endId) }
     var currentId by remember { mutableIntStateOf(initialId) }
 
-    // Pokémon preview state
     val pokemonState = produceState<PokemonDetail?>(initialValue = null, key1 = currentId) {
         value = service.getPokemonDetail(currentId)
     }
 
     var isFavorite by remember { mutableStateOf(false) }
 
-    // Update favorite state when preview is loaded
     LaunchedEffect(pokemonState.value?.id) {
         pokemonState.value?.id?.let { id ->
             isFavorite = service.isFavorite(context, id)
         }
     }
 
-    val pokemon = pokemonState.value
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+            .testTag("HomeScreen")
+    ) {
+        val pokemon = pokemonState.value
 
-    if (pokemon != null) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-                .testTag("HomeScreen"),
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-            // Card that fills remaining space above buttons
-            PokemonCard(
-                pokemon = pokemon,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-            )
-
-            // Bottom button row
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp, bottom = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+        if (pokemon != null) {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
-                IconButton(onClick = {
-                    coroutineScope.launch {
-                        service.setFavorite(context, pokemon.id, !isFavorite)
-                        isFavorite = !isFavorite
-                    }
-                }) {
-                    val icon = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder
-                    Icon(imageVector = icon, contentDescription = "Toggle favorite")
-                }
+                PokemonCard(
+                    pokemon = pokemon,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                )
 
-                Button(onClick = {
-                    currentId = Random.nextInt(startId, endId)
-                }) {
-                    Text("Randomize")
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp, bottom = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(onClick = {
+                        coroutineScope.launch {
+                            service.setFavorite(context, pokemon.id, !isFavorite)
+                            isFavorite = !isFavorite
+                        }
+                    }) {
+                        val icon = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder
+                        Icon(imageVector = icon, contentDescription = "Toggle favorite")
+                    }
+
+                    Button(onClick = {
+                        currentId = Random.nextInt(startId, endId)
+                    }) {
+                        Text("Randomize")
+                    }
                 }
             }
-        }
-    } else {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            CircularProgressIndicator()
+        } else {
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
     }
 }

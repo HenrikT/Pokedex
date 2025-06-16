@@ -11,6 +11,9 @@ import com.example.pokedex.model.PokemonDetail
  */
 object PokemonUtils {
 
+    /** The highest known National Dex ID for a Pokémon (Gen 9). */
+    const val MAX_POKEMON_ID = 1025
+
     /** Background color used in Pokémon card containers. */
     val PokemonCardContainerBackground = Color(0x7A5E5E5E)
 
