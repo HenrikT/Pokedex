@@ -1,9 +1,14 @@
-package com.example.pokedex.ui.component
+package com.example.pokedex.ui.component.pokemoncard
 
 import PokemonTypeRow
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -11,8 +16,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.pokedex.model.PokemonDetail
+import com.example.pokedex.ui.component.PokemonImage
+import com.example.pokedex.util.PokemonUtils
 
 /**
  * Card layout that displays the Pokémon's name, ID, and front sprite.
@@ -24,31 +34,62 @@ import com.example.pokedex.model.PokemonDetail
  */
 @Composable
 fun PokemonCard(pokemon: PokemonDetail, modifier: Modifier = Modifier) {
+
+    // Create a gradient to be used for the background using the colors of the types
+    // If only one type, use the color directly
+    val types = pokemon.types.map { it.type.name }
+    val backgroundBrush = when (types.size) {
+        2 -> Brush.linearGradient(
+            colors = listOf(
+                PokemonUtils.getTypeColor(types[0]),
+                PokemonUtils.getTypeColor(types[1])
+            ),
+            start = Offset(0f, 0f),
+            end = Offset(1000f, 1000f)
+        )
+        else -> Brush.verticalGradient(
+            colors = List(2) { PokemonUtils.getTypeColor(types.firstOrNull() ?: "") }
+        )
+    }
+
     Card(
         modifier = modifier,
         elevation = CardDefaults.cardElevation(6.dp)
     ) {
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .background(brush = backgroundBrush)
+                .padding(16.dp)
         ) {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "${pokemon.name.replaceFirstChar { it.uppercase() }} #${pokemon.id}",
+                    style = MaterialTheme.typography.headlineMedium,
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(bottom = 16.dp)
+                )
 
-            // Show the name and ID
-            Text(
-                text = "${pokemon.name.replaceFirstChar { it.uppercase() }} #${pokemon.id}",
-                style = MaterialTheme.typography.headlineMedium,
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(bottom = 16.dp)
-            )
+                PokemonImage(pokemon)
 
-            // Show the image
-            PokemonImage(pokemon)
-
-            // Show the pokémon types
-            PokemonTypeRow(pokemon)
+                // Wrap the type row in background to increase visibility
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                        .background(
+                            color = Color(0x7A5E5E5E),
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                        .padding(20.dp)
+                ) {
+                    PokemonTypeRow(pokemon)
+                }
+            }
         }
     }
 }
