@@ -15,7 +15,7 @@ class MainActivityTest {
     @Test
     fun bottomNav_clickingTabsNavigatesToCorrectScreen() {
         // Initial screen is Home
-        composeTestRule.onNodeWithTag("HomeScreen").assertExists()
+        composeTestRule.onNodeWithTag("HomeScreen", useUnmergedTree = true).assertExists()
 
         // Navigate to Library
         composeTestRule.onNodeWithText("Library").performClick()

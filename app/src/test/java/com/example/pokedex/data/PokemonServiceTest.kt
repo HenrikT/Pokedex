@@ -35,11 +35,13 @@ class PokemonServiceTest {
     }
 
     @Test
-    fun getPreview_returnsExpectedPokemon() = runTest {
-        val result = service.getPreview(1)
+    fun getPokemonDetail_returnsExpectedPokemon() = runTest {
+        val result = service.getPokemonDetail(1)
 
         assertEquals(1, result.id)
         assertEquals("bulbasaur", result.name)
+        assertTrue(result.entry.isNotBlank())
+        assertTrue(result.types.isNotEmpty())
     }
 
     @Test

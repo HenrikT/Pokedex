@@ -6,13 +6,21 @@ import co.pokeapi.pokekotlin.model.PokemonSprites
 import co.pokeapi.pokekotlin.model.PokemonType as Type
 
 /**
- * Fake implementation of IPokemonRepository for testing purposes.
+ * Fake implementation of [IPokemonRepository] for testing purposes.
  *
- * Returns a preconfigured Pokémon object to simulate repository behavior without external dependencies.
+ * Returns a preconfigured Pokémon object and entry string to simulate repository behavior without external dependencies.
  */
 class FakePokemonRepository : IPokemonRepository {
 
     override suspend fun getPokemon(id: Int): Pokemon? {
+        return createFakePokemon(id)
+    }
+
+    override suspend fun getPokemonWithEntry(id: Int): Pair<Pokemon, String>? {
+        return createFakePokemon(id) to "A strange seed was planted on its back at birth. The plant sprouts and grows with this Pokémon."
+    }
+
+    private fun createFakePokemon(id: Int): Pokemon {
         return Pokemon(
             id = id,
             name = "bulbasaur",
@@ -30,14 +38,14 @@ class FakePokemonRepository : IPokemonRepository {
             stats = emptyList(),
             types = listOf(Type(slot = 1, type = NamedApiResource("grass", "1"))),
             sprites = PokemonSprites(
-                null,
-                null,
-                "https://img.com/bulba.png",
-                null,
-                null,
-                null,
-                null,
-                null
+                backDefault = null,
+                backShiny = null,
+                frontDefault = "https://img.com/bulba.png",
+                frontShiny = null,
+                backFemale = null,
+                backShinyFemale = null,
+                frontFemale = null,
+                frontShinyFemale = null
             )
         )
     }
