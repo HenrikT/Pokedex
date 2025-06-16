@@ -17,4 +17,15 @@ interface IPokemonRepository {
      * @return A complete Pokémon model including name, ID, sprites, types, and more.
      */
     suspend fun getPokemon(id: Int): Pokemon?
+
+    /**
+     * Fetches a Pokémon and its Pokédex flavor text entry.
+     *
+     * Retrieves both the detailed Pokémon model and a short English entry
+     * from its species data. Returns null if either is missing.
+     *
+     * @param id The national Pokédex number of the Pokémon.
+     * @return A pair of [Pokemon] and flavor text, or null if not found.
+     */
+    suspend fun getPokemonWithEntry(id: Int): Pair<Pokemon, String>?
 }

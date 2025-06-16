@@ -2,7 +2,9 @@ package com.example.pokedex.ui.component.pokemoncard
 
 import PokemonTypeRow
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,12 +16,12 @@ import com.example.pokedex.model.PokemonDetail
 import com.example.pokedex.util.PokemonUtils.PokemonCardContainerBackground
 
 /**
- * Container displaying the Pokémon's type row with a styled background.
+ * Container displaying the Pokémon's type row and Pokédex entry with a styled background.
  *
- * Used inside [PokemonCard] to wrap type badges in a highlighted area,
- * improving visibility and creating visual separation.
+ * Used inside [PokemonCard] to wrap type badges and flavor text in a highlighted area,
+ * improving readability and visual structure.
  *
- * @param pokemon The Pokémon whose types should be rendered in the info box.
+ * @param pokemon The Pokémon whose types and entry should be rendered in the info box.
  */
 @Composable
 fun PokemonCardInfoBox(pokemon: PokemonDetail) {
@@ -33,6 +35,11 @@ fun PokemonCardInfoBox(pokemon: PokemonDetail) {
             )
             .padding(20.dp)
     ) {
-        PokemonTypeRow(pokemon)
+        Column(
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            PokemonTypeRow(pokemon)
+            PokemonEntryText(pokemon.entry)
+        }
     }
 }

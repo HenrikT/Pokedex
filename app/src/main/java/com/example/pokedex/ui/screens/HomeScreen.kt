@@ -37,7 +37,7 @@ fun HomeScreen() {
 
     // Pokémon preview state
     val pokemonState = produceState<PokemonDetail?>(initialValue = null, key1 = currentId) {
-        value = service.getPreview(currentId)
+        value = service.getPokemonDetail(currentId)
     }
 
     var isFavorite by remember { mutableStateOf(false) }

@@ -7,10 +7,10 @@ import kotlin.random.Random
 /**
  * Provides simplified Pokémon data for the UI layer.
  *
- * Fetches preview models, random entries, and favorite state,
+ * Fetches detailed Pokémon models, random entries, and favorite state,
  * combining raw repository data with local user preferences.
  *
- * @param repository Data source for complete Pokémon models.
+ * @param repository Data source for complete Pokémon models and species.
  * @param favoritesManager Local storage manager for user favorites.
  */
 class PokemonService(
@@ -20,11 +20,18 @@ class PokemonService(
 
     override suspend fun getRandomPokemon(): PokemonDetail {
         val id = Random.nextInt(1, MAX_POKEMON_ID + 1)
-        return getPreview(id)
+        return getPokemonDetail(id)
     }
 
-    override suspend fun getPreview(id: Int): PokemonDetail {
-        val pokemon = repository.getPokemon(id) ?: error("Pokémon with ID $id not found")
+    /**
+     * Fetches the full Pokémon detail including sprite, type info, and flavor text.
+     *
+     * @param id The Pokédex ID of the Pokémon.
+     * @return A fully populated [PokemonDetail] model.
+     */
+    override suspend fun getPokemonDetail(id: Int): PokemonDetail {
+        val (pokemon, entry) = repository.getPokemonWithEntry(id)
+            ?: error("Pokémon with ID $id not found")
 
         val spriteUrl = pokemon.sprites.frontDefault
             ?: error("No image available for Pokémon with ID $id")
@@ -33,7 +40,8 @@ class PokemonService(
             id = pokemon.id,
             name = pokemon.name.lowercase(),
             imageUrl = spriteUrl,
-            types = pokemon.types
+            types = pokemon.types,
+            entry = entry
         )
     }
 
