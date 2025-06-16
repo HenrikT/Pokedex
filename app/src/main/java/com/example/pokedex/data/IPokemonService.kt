@@ -1,7 +1,7 @@
 package com.example.pokedex.data
 
 import android.content.Context
-import com.example.pokedex.model.PokemonPreview
+import com.example.pokedex.model.PokemonDetail
 
 /**
  * High-level service interface for accessing and managing Pokémon data.
@@ -11,7 +11,7 @@ interface IPokemonService {
     /**
      * Fetches a random Pokémon from the Pokédex.
      */
-    suspend fun getRandomPokemon(): PokemonPreview
+    suspend fun getRandomPokemon(): PokemonDetail
 
     /**
      * Fetches a preview for a specific Pokémon by ID.
@@ -19,7 +19,7 @@ interface IPokemonService {
      * @param id The Pokémon's unique identifier.
      * @return A simplified preview of the Pokémon.
      */
-    suspend fun getPreview(id: Int): PokemonPreview
+    suspend fun getPreview(id: Int): PokemonDetail
 
     /**
      * Checks whether a given Pokémon is marked as favorite.

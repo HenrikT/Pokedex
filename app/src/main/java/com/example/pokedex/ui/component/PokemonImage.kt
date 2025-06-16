@@ -6,7 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import co.pokeapi.pokekotlin.model.Pokemon
 import coil.compose.AsyncImage
-import com.example.pokedex.model.PokemonPreview
+import com.example.pokedex.model.PokemonDetail
 
 /**
  * Displays the Pokémon's front-facing sprite image.
@@ -17,7 +17,7 @@ import com.example.pokedex.model.PokemonPreview
  * @param pokemon The [Pokemon] object containing sprite URL and name metadata.
  */
 @Composable
-fun PokemonImage(pokemon: PokemonPreview) {
+fun PokemonImage(pokemon: PokemonDetail) {
     AsyncImage(
         model = pokemon.imageUrl,
         contentDescription = "${pokemon.name} sprite",

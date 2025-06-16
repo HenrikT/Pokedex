@@ -1,6 +1,6 @@
 package com.example.pokedex.data
 
-import com.example.pokedex.model.PokemonPreview
+import com.example.pokedex.model.PokemonDetail
 import kotlin.random.Random
 
 /**
@@ -17,18 +17,18 @@ class PokemonService(
     private val favoritesManager: IFavoritesManager
 ) : IPokemonService {
 
-    override suspend fun getRandomPokemon(): PokemonPreview {
+    override suspend fun getRandomPokemon(): PokemonDetail {
         val id = Random.nextInt(1, MAX_POKEMON_ID + 1)
         return getPreview(id)
     }
 
-    override suspend fun getPreview(id: Int): PokemonPreview {
+    override suspend fun getPreview(id: Int): PokemonDetail {
         val pokemon = repository.getPokemon(id) ?: error("Pokémon with ID $id not found")
 
         val spriteUrl = pokemon.sprites.frontDefault
             ?: error("No image available for Pokémon with ID $id")
 
-        return PokemonPreview(
+        return PokemonDetail(
             id = pokemon.id,
             name = pokemon.name.lowercase(),
             imageUrl = spriteUrl

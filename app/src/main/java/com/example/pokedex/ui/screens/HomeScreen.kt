@@ -15,9 +15,8 @@ import com.example.pokedex.data.FavoritesManager
 import com.example.pokedex.data.IPokemonRepository
 import com.example.pokedex.data.PokemonRepository
 import com.example.pokedex.data.PokemonService
-import com.example.pokedex.model.PokemonPreview
+import com.example.pokedex.model.PokemonDetail
 import com.example.pokedex.ui.component.PokemonCard
-import com.example.pokedex.ui.component.PokemonImage
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
@@ -37,7 +36,7 @@ fun HomeScreen() {
     var currentId by remember { mutableIntStateOf(initialId) }
 
     // Pokémon preview state
-    val pokemonState = produceState<PokemonPreview?>(initialValue = null, key1 = currentId) {
+    val pokemonState = produceState<PokemonDetail?>(initialValue = null, key1 = currentId) {
         value = service.getPreview(currentId)
     }
 

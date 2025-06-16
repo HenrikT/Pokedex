@@ -1,8 +1,8 @@
 package com.example.pokedex.ui.component
 
+import PokemonTypeRow
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -12,7 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.pokedex.model.PokemonPreview
+import com.example.pokedex.model.PokemonDetail
 
 /**
  * Card layout that displays the Pokémon's name, ID, and front sprite.
@@ -20,10 +20,10 @@ import com.example.pokedex.model.PokemonPreview
  * Used on the home screen to visually present the currently selected Pokémon.
  * This card occupies all available vertical space above the control buttons.
  *
- * @param pokemon The [PokemonPreview] model containing ID, name, and image URL.
+ * @param pokemon The [PokemonDetail] model containing ID, name, and image URL.
  */
 @Composable
-fun PokemonCard(pokemon: PokemonPreview, modifier: Modifier = Modifier) {
+fun PokemonCard(pokemon: PokemonDetail, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier,
         elevation = CardDefaults.cardElevation(6.dp)
