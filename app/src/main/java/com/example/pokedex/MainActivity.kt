@@ -28,9 +28,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     bottomBar = {
-                        BottomNavBar(
-                            selected = navController.currentDestination?.route ?: BottomNavItem.Home.route,
-                            onTabSelected = { navController.navigate(it) }
+                        BottomNavBar(navController = navController
                         )
                     }
                 ) { innerPadding ->
