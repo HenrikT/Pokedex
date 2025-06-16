@@ -13,16 +13,16 @@ class PokemonServiceTest {
 
     private lateinit var service: IPokemonService
     private lateinit var fakeRepo: FakePokemonRepository
-    private lateinit var mockFavorites: IFavoritesManager
+    private lateinit var mockMyPokemon: IMyPokemonManager
     private lateinit var context: Context
 
     @Before
     fun setUp() {
         fakeRepo = FakePokemonRepository()
-        mockFavorites = mockk(relaxed = true)
+        mockMyPokemon = mockk(relaxed = true)
         context = mockk(relaxed = true)
 
-        service = PokemonService(fakeRepo, mockFavorites)
+        service = PokemonService(fakeRepo, mockMyPokemon)
     }
 
     @Test
@@ -45,47 +45,47 @@ class PokemonServiceTest {
     }
 
     @Test
-    fun isFavorite_returnsTrueAfterSettingFavorite() = runTest {
+    fun isInMyPokemon_returnsTrueAfterAdding() = runTest {
         val id = 1
 
-        coEvery { mockFavorites.setFavorite(context, id, true) } returns Unit
-        coEvery { mockFavorites.isFavorite(context, id) } returns true
+        coEvery { mockMyPokemon.setMyPokemon(context, id, true) } returns Unit
+        coEvery { mockMyPokemon.isInMyPokemon(context, id) } returns true
 
-        service.setFavorite(context, id, true)
-        val result = service.isFavorite(context, id)
+        service.setMyPokemon(context, id, true)
+        val result = service.isInMyPokemon(context, id)
 
         assertTrue(result)
 
-        coVerify { mockFavorites.setFavorite(context, id, true) }
-        coVerify { mockFavorites.isFavorite(context, id) }
+        coVerify { mockMyPokemon.setMyPokemon(context, id, true) }
+        coVerify { mockMyPokemon.isInMyPokemon(context, id) }
     }
 
     @Test
-    fun isFavorite_returnsFalseByDefault() = runTest {
+    fun isInMyPokemon_returnsFalseByDefault() = runTest {
         val id = 999
-        coEvery { mockFavorites.isFavorite(context, id) } returns false
+        coEvery { mockMyPokemon.isInMyPokemon(context, id) } returns false
 
-        val result = service.isFavorite(context, id)
+        val result = service.isInMyPokemon(context, id)
         assertFalse(result)
 
-        coVerify { mockFavorites.isFavorite(context, id) }
+        coVerify { mockMyPokemon.isInMyPokemon(context, id) }
     }
 
     @Test
-    fun setFavorite_false_removesFromFavorites() = runTest {
+    fun setMyPokemon_false_removesFromList() = runTest {
         val id = 1
 
-        coEvery { mockFavorites.setFavorite(context, id, true) } returns Unit
-        coEvery { mockFavorites.setFavorite(context, id, false) } returns Unit
-        coEvery { mockFavorites.isFavorite(context, id) } returns false
+        coEvery { mockMyPokemon.setMyPokemon(context, id, true) } returns Unit
+        coEvery { mockMyPokemon.setMyPokemon(context, id, false) } returns Unit
+        coEvery { mockMyPokemon.isInMyPokemon(context, id) } returns false
 
-        service.setFavorite(context, id, true)
-        service.setFavorite(context, id, false)
+        service.setMyPokemon(context, id, true)
+        service.setMyPokemon(context, id, false)
 
-        val result = service.isFavorite(context, id)
+        val result = service.isInMyPokemon(context, id)
         assertFalse(result)
 
-        coVerify { mockFavorites.setFavorite(context, id, true) }
-        coVerify { mockFavorites.setFavorite(context, id, false) }
+        coVerify { mockMyPokemon.setMyPokemon(context, id, true) }
+        coVerify { mockMyPokemon.setMyPokemon(context, id, false) }
     }
 }

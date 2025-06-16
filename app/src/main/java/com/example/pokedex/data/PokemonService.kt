@@ -8,15 +8,15 @@ import kotlin.random.Random
 /**
  * Provides simplified Pokémon data for the UI layer.
  *
- * Fetches detailed Pokémon models, random entries, and favorite state,
+ * Fetches detailed Pokémon models, random entries, and "My Pokémon" state,
  * combining raw repository data with local user preferences.
  *
  * @param repository Data source for complete Pokémon models and species.
- * @param favoritesManager Local storage manager for user favorites.
+ * @param myPokemonManager Local storage manager for user-saved Pokémon.
  */
 class PokemonService(
     private val repository: IPokemonRepository,
-    private val favoritesManager: IFavoritesManager
+    private val myPokemonManager: IMyPokemonManager
 ) : IPokemonService {
 
     override suspend fun getRandomPokemon(): PokemonDetail {
@@ -40,11 +40,11 @@ class PokemonService(
         )
     }
 
-    override suspend fun isFavorite(context: Context, id: Int): Boolean {
-        return favoritesManager.isFavorite(context, id)
+    override suspend fun isInMyPokemon(context: Context, id: Int): Boolean {
+        return myPokemonManager.isInMyPokemon(context, id)
     }
 
-    override suspend fun setFavorite(context: Context, id: Int, isFavorite: Boolean) {
-        favoritesManager.setFavorite(context, id, isFavorite)
+    override suspend fun setMyPokemon(context: Context, id: Int, save: Boolean) {
+        myPokemonManager.setMyPokemon(context, id, save)
     }
 }

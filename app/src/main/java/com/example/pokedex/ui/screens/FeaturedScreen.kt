@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
-import com.example.pokedex.data.FavoritesManager
+import com.example.pokedex.data.MyPokemonManager
 import com.example.pokedex.data.IPokemonRepository
 import com.example.pokedex.data.PokemonRepository
 import com.example.pokedex.data.PokemonService
@@ -36,7 +36,7 @@ fun FeaturedScreen() {
     val endId = MAX_POKEMON_ID
 
     val repository: IPokemonRepository = PokemonRepository()
-    val service = PokemonService(repository, FavoritesManager)
+    val service = PokemonService(repository, MyPokemonManager)
 
     val initialId = remember { Random.nextInt(startId, endId) }
     var currentId by remember { mutableIntStateOf(initialId) }
@@ -45,11 +45,11 @@ fun FeaturedScreen() {
         value = service.getPokemonDetail(currentId)
     }
 
-    var isFavorite by remember { mutableStateOf(false) }
+    var isInMyPokemon by remember { mutableStateOf(false) }
 
     LaunchedEffect(pokemonState.value?.id) {
         pokemonState.value?.id?.let { id ->
-            isFavorite = service.isFavorite(context, id)
+            isInMyPokemon = service.isInMyPokemon(context, id)
         }
     }
 
@@ -82,12 +82,12 @@ fun FeaturedScreen() {
                 ) {
                     IconButton(onClick = {
                         coroutineScope.launch {
-                            service.setFavorite(context, pokemon.id, !isFavorite)
-                            isFavorite = !isFavorite
+                            service.setMyPokemon(context, pokemon.id, !isInMyPokemon)
+                            isInMyPokemon = !isInMyPokemon
                         }
                     }) {
-                        val icon = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder
-                        Icon(imageVector = icon, contentDescription = "Toggle favorite")
+                        val icon = if (isInMyPokemon) Icons.Default.Favorite else Icons.Default.FavoriteBorder
+                        Icon(imageVector = icon, contentDescription = "Add to my pokémon")
                     }
 
                     Button(onClick = {
