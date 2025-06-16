@@ -16,7 +16,7 @@ import com.example.pokedex.data.IPokemonRepository
 import com.example.pokedex.data.PokemonRepository
 import com.example.pokedex.data.PokemonService
 import com.example.pokedex.model.PokemonDetail
-import com.example.pokedex.ui.component.PokemonCard
+import com.example.pokedex.ui.component.pokemoncard.PokemonCard
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
