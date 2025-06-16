@@ -71,8 +71,8 @@ fun PokeBallButton(
                 painter = painterResource(id = R.drawable.ball),
                 contentDescription = "Poké Ball",
                 modifier = Modifier
-                    .size(36.dp)
-                    .scale(1.5f)
+                    .size(48.dp)
+                    .scale(1.4f)
             )
         }
     }
