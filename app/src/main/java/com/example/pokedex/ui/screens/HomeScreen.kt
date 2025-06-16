@@ -16,6 +16,7 @@ import com.example.pokedex.data.IPokemonRepository
 import com.example.pokedex.data.PokemonRepository
 import com.example.pokedex.data.PokemonService
 import com.example.pokedex.model.PokemonPreview
+import com.example.pokedex.ui.component.PokemonCard
 import com.example.pokedex.ui.component.PokemonImage
 import kotlinx.coroutines.launch
 import kotlin.random.Random
@@ -60,31 +61,12 @@ fun HomeScreen() {
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             // Card that fills remaining space above buttons
-            Card(
+            PokemonCard(
+                pokemon = pokemon,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f),
-                elevation = CardDefaults.cardElevation(6.dp)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    // Top: name + number
-                    Text(
-                        text = "${pokemon.name.replaceFirstChar { it.uppercase() }} #${pokemon.id}",
-                        style = MaterialTheme.typography.headlineMedium,
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
-                            .padding(bottom = 16.dp)
-                    )
-
-                    // Sprite
-                    PokemonImage(pokemon)
-                }
-            }
+                    .weight(1f)
+            )
 
             // Bottom button row
             Row(
