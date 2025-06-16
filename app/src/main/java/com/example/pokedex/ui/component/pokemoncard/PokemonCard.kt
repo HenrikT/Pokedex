@@ -1,24 +1,17 @@
 package com.example.pokedex.ui.component.pokemoncard
 
-import PokemonTypeRow
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.pokedex.model.PokemonDetail
 import com.example.pokedex.ui.component.PokemonImage
@@ -66,29 +59,15 @@ fun PokemonCard(pokemon: PokemonDetail, modifier: Modifier = Modifier) {
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = "${pokemon.name.replaceFirstChar { it.uppercase() }} #${pokemon.id}",
-                    style = MaterialTheme.typography.headlineMedium,
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .padding(bottom = 16.dp)
-                )
 
+                // Show the name and number of the pokémon
+                PokemonCardNameHeader(pokemon)
+
+                // Show the pokémon image
                 PokemonImage(pokemon)
 
-                // Wrap the type row in background to increase visibility
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight()
-                        .background(
-                            color = Color(0x7A5E5E5E),
-                            shape = RoundedCornerShape(8.dp)
-                        )
-                        .padding(20.dp)
-                ) {
-                    PokemonTypeRow(pokemon)
-                }
+                // Show the info box
+                PokemonCardInfoBox(pokemon)
             }
         }
     }
