@@ -13,9 +13,11 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.example.pokedex.data.MyPokemonManager
 import com.example.pokedex.data.IPokemonRepository
+import com.example.pokedex.data.MyPokemonManager.isInMyPokemon
 import com.example.pokedex.data.PokemonRepository
 import com.example.pokedex.data.PokemonService
 import com.example.pokedex.model.PokemonDetail
+import com.example.pokedex.ui.component.PokeBallButton
 import com.example.pokedex.ui.component.pokemoncard.PokemonCard
 import com.example.pokedex.util.PokemonUtils.MAX_POKEMON_ID
 import kotlinx.coroutines.launch
@@ -41,15 +43,15 @@ fun FeaturedScreen() {
     val initialId = remember { Random.nextInt(startId, endId) }
     var currentId by remember { mutableIntStateOf(initialId) }
 
+    var isCaught by remember { mutableStateOf(false) }
+
     val pokemonState = produceState<PokemonDetail?>(initialValue = null, key1 = currentId) {
         value = service.getPokemonDetail(currentId)
     }
 
-    var isInMyPokemon by remember { mutableStateOf(false) }
-
     LaunchedEffect(pokemonState.value?.id) {
         pokemonState.value?.id?.let { id ->
-            isInMyPokemon = service.isInMyPokemon(context, id)
+            isCaught = service.isInMyPokemon(context, id)
         }
     }
 
@@ -80,15 +82,18 @@ fun FeaturedScreen() {
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    IconButton(onClick = {
-                        coroutineScope.launch {
-                            service.setMyPokemon(context, pokemon.id, !isInMyPokemon)
-                            isInMyPokemon = !isInMyPokemon
+                    PokeBallButton(
+                        isCaught = isCaught,
+                        onToggleCatch = {
+                            val id = pokemonState.value?.id
+                            if (id != null) {
+                                coroutineScope.launch {
+                                    MyPokemonManager.toggleMyPokemon(context, id)
+                                    isCaught = isInMyPokemon(context, id)
+                                }
+                            }
                         }
-                    }) {
-                        val icon = if (isInMyPokemon) Icons.Default.Favorite else Icons.Default.FavoriteBorder
-                        Icon(imageVector = icon, contentDescription = "Add to my pokémon")
-                    }
+                    )
 
                     Button(onClick = {
                         currentId = Random.nextInt(startId, endId)
