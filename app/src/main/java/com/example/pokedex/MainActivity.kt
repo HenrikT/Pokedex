@@ -8,14 +8,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.pokedex.ui.navigation.BottomNavBar
 import com.example.pokedex.ui.navigation.BottomNavItem
 import com.example.pokedex.ui.screens.FeaturedScreen
 import com.example.pokedex.ui.screens.MyPokemonScreen
 import com.example.pokedex.ui.screens.PokedexScreen
+import com.example.pokedex.ui.screens.PokemonDetailScreen
 import com.example.pokedex.ui.theme.PokedexTheme
 
 /**
@@ -67,6 +70,16 @@ class MainActivity : AppCompatActivity() {
                         }
                         composable(BottomNavItem.MyPokemon.route) {
                             MyPokemonScreen(navController)
+                        }
+                        composable(
+                            route = "pokemon/{id}",
+                            arguments = listOf(navArgument("id") { type = NavType.IntType })
+                        ) { backStackEntry ->
+                            val id = backStackEntry.arguments?.getInt("id") ?: return@composable
+                            PokemonDetailScreen(
+                                navController = navController,
+                                pokemonId = id
+                            )
                         }
                     }
                 }

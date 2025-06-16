@@ -62,9 +62,7 @@ fun PokemonTile(navController: NavController, pokemon: PokemonDetail) {
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                // Navigates to the Pokémon detail screen
-                // Todo: implement
-                //navController.navigate("pokemon/${pokemon.id}")
+                navController.navigate("pokemon/${pokemon.id}")
             },
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
     ) {
