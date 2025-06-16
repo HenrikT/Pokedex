@@ -1,5 +1,6 @@
 package com.example.pokedex.data
 
+import android.content.Context
 import com.example.pokedex.model.PokemonDetail
 import kotlin.random.Random
 
@@ -28,21 +29,19 @@ class PokemonService(
         val spriteUrl = pokemon.sprites.frontDefault
             ?: error("No image available for Pokémon with ID $id")
 
-        val types = pokemon.types.map { it.type.name }
-
         return PokemonDetail(
             id = pokemon.id,
             name = pokemon.name.lowercase(),
             imageUrl = spriteUrl,
-            types = types
+            types = pokemon.types
         )
     }
 
-    override suspend fun isFavorite(context: android.content.Context, id: Int): Boolean {
+    override suspend fun isFavorite(context: Context, id: Int): Boolean {
         return favoritesManager.isFavorite(context, id)
     }
 
-    override suspend fun setFavorite(context: android.content.Context, id: Int, isFavorite: Boolean) {
+    override suspend fun setFavorite(context: Context, id: Int, isFavorite: Boolean) {
         favoritesManager.setFavorite(context, id, isFavorite)
     }
 

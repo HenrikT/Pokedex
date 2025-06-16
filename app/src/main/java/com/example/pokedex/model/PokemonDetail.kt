@@ -1,19 +1,20 @@
 package com.example.pokedex.model
 
+import co.pokeapi.pokekotlin.model.PokemonType
+
 /**
- * Represents a simplified Pokémon used in UI cards or detail views.
+ * Detailed representation of a Pokémon used for the main card view.
  *
- * Includes only essential data such as ID, name, image, and type list
- * to render a compact preview without relying on full API models.
+ * Includes all data required to show an image, name, and type info.
  *
  * @param id The national Pokédex ID of the Pokémon.
  * @param name The lowercase name of the Pokémon.
- * @param imageUrl URL to the front-facing sprite image.
- * @param types A list of lowercase Pokémon type names (e.g. "fire", "grass").
+ * @param imageUrl The sprite image URL used for display.
+ * @param types All types this Pokémon has, in order of slot.
  */
 data class PokemonDetail(
     val id: Int,
     val name: String,
     val imageUrl: String,
-    val types: List<String>
+    val types: List<PokemonType>
 )

@@ -10,20 +10,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import co.pokeapi.pokekotlin.model.PokemonType
 import com.example.pokedex.util.PokemonUtils
 
 /**
  * Displays a single Pokémon type as a colored badge.
  *
- * The badge uses the official Pokémon type color from [PokemonUtils.getTypeColor]
- * and shows the capitalized type name in bold white text.
+ * Uses the official Pokémon type color from [PokemonUtils.getTypeColor] based on the
+ * provided [PokemonType] and renders the capitalized name in bold white text.
  *
- * @param type The Pokémon type name (e.g. "fire", "water").
- * @param modifier Optional [Modifier] for additional layout customization.
+ * @param type The full [PokemonType] object, including the type name.
+ * @param modifier Optional [Modifier] for layout customization.
  */
 @Composable
-fun PokemonTypeBadge(type: String, modifier: Modifier = Modifier) {
-    val typeColor = PokemonUtils.getTypeColor(type)
+fun PokemonTypeBadge(type: PokemonType, modifier: Modifier = Modifier) {
+    val typeName = type.type.name
+    val typeColor = PokemonUtils.getTypeColor(typeName)
 
     Box(
         modifier = modifier
@@ -32,7 +34,7 @@ fun PokemonTypeBadge(type: String, modifier: Modifier = Modifier) {
         contentAlignment = Alignment.Center,
     ) {
         Text(
-            text = type.replaceFirstChar { it.uppercase() },
+            text = typeName.replaceFirstChar { it.uppercase() },
             color = Color.White,
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold
