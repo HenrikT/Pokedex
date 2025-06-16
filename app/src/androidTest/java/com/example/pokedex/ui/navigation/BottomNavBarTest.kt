@@ -1,4 +1,5 @@
 package com.example.pokedex.ui.navigation
+
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
@@ -15,15 +16,15 @@ class BottomNavBarTest {
 
     @Test
     fun bottomNavigation_navigatesToCorrectScreens() {
-        // Check that this is the default screen
-        composeTestRule.onNodeWithTag("HomeScreen").assertIsDisplayed()
+        // Start on Featured
+        composeTestRule.onNodeWithTag("FeaturedScreen").assertIsDisplayed()
 
-        // Navigate to Bookmarks
-        composeTestRule.onNodeWithText("Bookmarks").performClick()
-        composeTestRule.onNodeWithTag("BookmarksScreen").assertIsDisplayed()
+        // Navigate to My Pokémon
+        composeTestRule.onNodeWithText("My Pokémon").performClick()
+        composeTestRule.onNodeWithTag("MyPokemonScreen").assertIsDisplayed()
 
-        // Navigate to Library
-        composeTestRule.onNodeWithText("Library").performClick()
-        composeTestRule.onNodeWithTag("LibraryScreen").assertIsDisplayed()
+        // Navigate to Pokédex
+        composeTestRule.onNodeWithText("Pokédex").performClick()
+        composeTestRule.onNodeWithTag("PokedexScreen").assertIsDisplayed()
     }
 }

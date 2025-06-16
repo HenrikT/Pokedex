@@ -7,13 +7,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.navigation.NavController
 
+/**
+ * Screen that displays the user's favorite Pokémon.
+ *
+ * Lets kids revisit their favorite Pokémon — the ones they’ve starred and saved.
+ * Feels like their own hand-picked Poké-team.
+ */
 @Composable
-fun BookmarksScreen() {
+fun MyPokemonScreen(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .semantics { contentDescription = "Bookmarks screen showing my Pokémon" }
-            .testTag("BookmarksScreen")
+            .semantics { contentDescription = "My Pokémon screen showing saved favorites" }
+            .testTag("MyPokemonScreen")
     )
 }

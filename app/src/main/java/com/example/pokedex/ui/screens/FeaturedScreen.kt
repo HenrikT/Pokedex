@@ -21,8 +21,14 @@ import com.example.pokedex.util.PokemonUtils.MAX_POKEMON_ID
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
+/**
+ * Featured screen that shows one fun Pokémon at a time.
+ *
+ * Lets the user discover a random Pokémon and mark it as a favorite.
+ * Meant to surprise and entertain with new creatures on each visit.
+ */
 @Composable
-fun HomeScreen() {
+fun FeaturedScreen() {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
@@ -51,7 +57,7 @@ fun HomeScreen() {
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
-            .testTag("HomeScreen")
+            .testTag("FeaturedScreen")
     ) {
         val pokemon = pokemonState.value
 

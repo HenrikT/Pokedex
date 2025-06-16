@@ -1,28 +1,56 @@
 package com.example.pokedex.ui.navigation
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 
 /**
- * Represents a single tab in the bottom navigation bar.
+ * Represents an item in the bottom navigation bar.
  *
- * Each tab has a unique route, a visible label, and an associated icon.
- *
- * Used by [BottomNavBar] to render selectable navigation options.
- *
- * @param route Unique ID used to identify the tab and handle selection.
- * @param label Visible name of the tab shown to users.
- * @param icon Visual icon shown alongside the label.
+ * Each object corresponds to a screen and defines:
+ * - `route`: the navigation route for the screen.
+ * - `label`: the display name shown in the navigation bar.
+ * - `icon`: a composable that returns either a vector or painter icon.
  */
 sealed class BottomNavItem(
     val route: String,
     val label: String,
-    val icon: ImageVector
+    val icon: @Composable () -> BottomNavIcon
 ) {
-    object Home : BottomNavItem("home", "Home", Icons.Filled.Home)
-    object Library : BottomNavItem("library", "Library", Icons.Filled.Search)
-    object Bookmarks : BottomNavItem("bookmarks", "Bookmarks", Icons.Filled.Star)
+    object Featured : BottomNavItem(
+        route = "featured",
+        label = "Featured",
+        icon = { BottomNavIcon.Vector(Icons.Filled.EmojiEvents) }
+    )
+
+    object Pokedex : BottomNavItem(
+        route = "pokedex",
+        label = "Pokédex",
+        icon = { BottomNavIcon.Vector(Icons.Filled.Search) }
+    )
+
+    object MyPokemon : BottomNavItem(
+        route = "myPokemon",
+        label = "My Pokémon",
+        icon = {
+            BottomNavIcon.PainterIcon(
+                painter = androidx.compose.ui.res.painterResource(
+                    id = com.example.pokedex.R.drawable.ball
+                )
+            )
+        }
+    )
+}
+
+/**
+ * Sealed class to represent the two types of icons used in bottom navigation:
+ * - [Vector] for vector-based icons from the material icon set.
+ * - [PainterIcon] for custom drawable resources.
+ */
+sealed class BottomNavIcon {
+    data class Vector(val icon: ImageVector) : BottomNavIcon()
+    data class PainterIcon(val painter: Painter) : BottomNavIcon()
 }

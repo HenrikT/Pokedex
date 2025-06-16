@@ -1,10 +1,10 @@
 package com.example.pokedex
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
@@ -13,35 +13,61 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.pokedex.ui.navigation.BottomNavBar
 import com.example.pokedex.ui.navigation.BottomNavItem
-import com.example.pokedex.ui.screens.BookmarksScreen
-import com.example.pokedex.ui.screens.HomeScreen
-import com.example.pokedex.ui.screens.LibraryScreen
+import com.example.pokedex.ui.screens.FeaturedScreen
+import com.example.pokedex.ui.screens.MyPokemonScreen
+import com.example.pokedex.ui.screens.PokedexScreen
 import com.example.pokedex.ui.theme.PokedexTheme
 
-class MainActivity : ComponentActivity() {
+/**
+ * The main entry point of the application after the splash screen.
+ *
+ * Sets up the navigation graph, bottom navigation bar, and intercepts system back button
+ * to preserve in-memory state like the Pokémon cache.
+ */
+class MainActivity : AppCompatActivity() {
+
+    /**
+     * Initializes the Compose UI and handles system back press behavior.
+     *
+     * Uses [Scaffold] with a [BottomNavBar], and sets up routing between
+     * Featured, Pokédex, My Pokémon, and Pokémon detail screens.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Intercept the system back press
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // Instead of closing the app, move it to background. This ensures the pokédex stays cached.
+                moveTaskToBack(true)
+            }
+        })
+
         enableEdgeToEdge()
+
         setContent {
             PokedexTheme {
                 val navController = rememberNavController()
+
                 Scaffold(
-                    modifier = Modifier.fillMaxSize(),
                     bottomBar = {
-                        BottomNavBar(navController = navController
-                        )
+                        BottomNavBar(navController)
                     }
                 ) { innerPadding ->
                     NavHost(
                         navController = navController,
-                        startDestination = BottomNavItem.Home.route,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(innerPadding)
+                        startDestination = BottomNavItem.Featured.route,
+                        modifier = Modifier.padding(innerPadding)
                     ) {
-                        composable(BottomNavItem.Home.route) { HomeScreen() }
-                        composable(BottomNavItem.Library.route) { LibraryScreen() }
-                        composable(BottomNavItem.Bookmarks.route) { BookmarksScreen() }
+                        composable(BottomNavItem.Featured.route) {
+                            FeaturedScreen()
+                        }
+                        composable(BottomNavItem.Pokedex.route) {
+                            PokedexScreen(navController)
+                        }
+                        composable(BottomNavItem.MyPokemon.route) {
+                            MyPokemonScreen(navController)
+                        }
                     }
                 }
             }
