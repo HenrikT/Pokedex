@@ -1,5 +1,6 @@
 package com.example.pokedex.ui.screens
 
+import android.R.attr.onClick
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -14,6 +15,7 @@ import com.example.pokedex.data.MyPokemonManager.isInMyPokemon
 import com.example.pokedex.data.PokemonRepository
 import com.example.pokedex.data.PokemonService
 import com.example.pokedex.model.PokemonDetail
+import com.example.pokedex.ui.component.DieButton
 import com.example.pokedex.ui.component.PokeBallButton
 import com.example.pokedex.ui.component.pokemoncard.PokemonCard
 import com.example.pokedex.util.PokemonUtils.MAX_POKEMON_ID
@@ -92,10 +94,8 @@ fun FeaturedScreen() {
                         }
                     )
 
-                    Button(onClick = {
+                    DieButton {
                         currentId = Random.nextInt(startId, endId)
-                    }) {
-                        Text("Randomize")
                     }
                 }
             }
