@@ -1,6 +1,7 @@
 package com.example.pokedex.util
 
 import androidx.compose.ui.graphics.Color
+import com.example.pokedex.model.PokemonDetail
 
 /**
  * Utility class for Pokémon-related operations and constants.
@@ -9,6 +10,30 @@ import androidx.compose.ui.graphics.Color
  * that make the app more engaging and themed.
  */
 object PokemonUtils {
+
+    /** Background color used in Pokémon card containers. */
+    val PokemonCardContainerBackground = Color(0x7A5E5E5E)
+
+    /**
+     * Returns the Pokémon's name with the first letter capitalized.
+     */
+    fun getName(pokemon: PokemonDetail): String {
+        return pokemon.name.replaceFirstChar { it.uppercase() }
+    }
+
+    /**
+     * Returns the Pokémon's ID as a string.
+     */
+    fun getId(pokemon: PokemonDetail): String {
+        return "#${pokemon.id}"
+    }
+
+    /**
+     * Formats the Pokémon's name with its ID in the form: "Swellow #277".
+     */
+    fun getFormattedPokemonName(pokemon: PokemonDetail): String {
+        return "${getName(pokemon)} ${getId(pokemon)}"
+    }
 
     /**
      * Maps Pokémon types to their official color codes.
