@@ -4,19 +4,25 @@ import com.example.pokedex.model.PokemonPreview
 import kotlin.random.Random
 
 /**
- * Implementation of [IPokemonService] that uses [IPokemonRepository] to fetch Pokémon data.
+ * Provides simplified Pokémon data for the UI layer.
  *
- * This service provides high-level access to simplified Pokémon models used in the UI,
- * including random selection and data formatting.
+ * Fetches preview models, random entries, and favorite state,
+ * combining raw repository data with local user preferences.
  *
- * @param repository The repository used to retrieve full Pokémon details from the API.
+ * @param repository Data source for complete Pokémon models.
+ * @param favoritesManager Local storage manager for user favorites.
  */
 class PokemonService(
-    private val repository: IPokemonRepository
+    private val repository: IPokemonRepository,
+    private val favoritesManager: IFavoritesManager
 ) : IPokemonService {
 
     override suspend fun getRandomPokemon(): PokemonPreview {
         val id = Random.nextInt(1, MAX_POKEMON_ID + 1)
+        return getPreview(id)
+    }
+
+    override suspend fun getPreview(id: Int): PokemonPreview {
         val pokemon = repository.getPokemon(id) ?: error("Pokémon with ID $id not found")
 
         val spriteUrl = pokemon.sprites.frontDefault
@@ -27,6 +33,14 @@ class PokemonService(
             name = pokemon.name.lowercase(),
             imageUrl = spriteUrl
         )
+    }
+
+    override suspend fun isFavorite(context: android.content.Context, id: Int): Boolean {
+        return favoritesManager.isFavorite(context, id)
+    }
+
+    override suspend fun setFavorite(context: android.content.Context, id: Int, isFavorite: Boolean) {
+        favoritesManager.setFavorite(context, id, isFavorite)
     }
 
     companion object {

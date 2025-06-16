@@ -1,23 +1,40 @@
 package com.example.pokedex.data
 
+import android.content.Context
 import com.example.pokedex.model.PokemonPreview
 
 /**
  * High-level service interface for accessing and managing Pokémon data.
- *
- * Used by the UI layer to retrieve simplified Pokémon models such as previews or detailed info.
- * This service abstracts away repository logic and external API concerns.
  */
 interface IPokemonService {
 
     /**
      * Fetches a random Pokémon from the Pokédex.
-     *
-     * This method is used to retrieve a new Pokémon every time the user opens the app
-     * or explicitly requests one. The Pokémon will include only the necessary preview data
-     * used in overview displays.
-     *
-     * @return A preview of a random Pokémon, including ID, name, and image URL.
      */
     suspend fun getRandomPokemon(): PokemonPreview
+
+    /**
+     * Fetches a preview for a specific Pokémon by ID.
+     *
+     * @param id The Pokémon's unique identifier.
+     * @return A simplified preview of the Pokémon.
+     */
+    suspend fun getPreview(id: Int): PokemonPreview
+
+    /**
+     * Checks whether a given Pokémon is marked as favorite.
+     *
+     * @param context The context used to access local storage.
+     * @param id The Pokémon ID.
+     */
+    suspend fun isFavorite(context: Context, id: Int): Boolean
+
+    /**
+     * Updates the favorite status of a Pokémon.
+     *
+     * @param context The context used to access local storage.
+     * @param id The Pokémon ID.
+     * @param isFavorite Whether the Pokémon should be marked as favorite.
+     */
+    suspend fun setFavorite(context: Context, id: Int, isFavorite: Boolean)
 }
