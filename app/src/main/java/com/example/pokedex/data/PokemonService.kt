@@ -26,7 +26,13 @@ class PokemonService(
 
     override suspend fun getPokemonDetail(id: Int): PokemonDetail {
         val (pokemon, entry) = repository.getPokemonWithEntry(id)
-            ?: error("Pokémon with ID $id not found")
+            ?: return PokemonDetail(
+                id = id,
+                name = "MissingNo",
+                imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png",
+                types = emptyList(),
+                entry = "This Pokémon could not be loaded."
+            )
 
         val spriteUrl = pokemon.sprites.frontDefault
             ?: error("No image available for Pokémon with ID $id")
