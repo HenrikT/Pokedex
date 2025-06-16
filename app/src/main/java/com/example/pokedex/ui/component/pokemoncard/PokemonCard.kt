@@ -34,6 +34,8 @@ fun PokemonCard(pokemon: PokemonDetail, modifier: Modifier = Modifier) {
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
+            // Show the name and ID
             Text(
                 text = "${pokemon.name.replaceFirstChar { it.uppercase() }} #${pokemon.id}",
                 style = MaterialTheme.typography.headlineMedium,
@@ -41,7 +43,12 @@ fun PokemonCard(pokemon: PokemonDetail, modifier: Modifier = Modifier) {
                     .align(Alignment.CenterHorizontally)
                     .padding(bottom = 16.dp)
             )
+
+            // Show the image
             PokemonImage(pokemon)
+
+            // Show the pokémon types
+            PokemonTypeRow(pokemon)
         }
     }
 }

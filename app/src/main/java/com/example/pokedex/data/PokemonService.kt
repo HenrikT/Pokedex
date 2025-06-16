@@ -28,10 +28,13 @@ class PokemonService(
         val spriteUrl = pokemon.sprites.frontDefault
             ?: error("No image available for Pokémon with ID $id")
 
+        val types = pokemon.types.map { it.type.name }
+
         return PokemonDetail(
             id = pokemon.id,
             name = pokemon.name.lowercase(),
-            imageUrl = spriteUrl
+            imageUrl = spriteUrl,
+            types = types
         )
     }
 
