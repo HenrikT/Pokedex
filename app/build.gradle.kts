@@ -57,4 +57,10 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.pokekotlin)
+    testImplementation(libs.kotlinx.coroutines.test)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.coil)
+    implementation(libs.androidx.datastore.preferences)
+    testImplementation(libs.mockk)
+    implementation(libs.androidx.material.icons.extended)
 }
