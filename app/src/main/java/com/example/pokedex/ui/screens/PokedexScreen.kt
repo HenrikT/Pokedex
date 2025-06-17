@@ -24,6 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.pokedex.data.PokemonService
 import com.example.pokedex.ui.component.pokemontile.PokemonTileSmall
+import com.example.pokedex.util.PokemonUtils
+import com.example.pokedex.util.PokemonUtils.similarity
 
 /**
  * Pokédex screen that displays a searchable grid of all available Pokémon.
@@ -32,6 +34,7 @@ import com.example.pokedex.ui.component.pokemontile.PokemonTileSmall
  * - Displays a 3-column responsive grid of Pokémon using [PokemonTileSmall].
  * - Allows live search by Pokémon name.
  * - Shows a spinner while data is being loaded.
+ * - Supports fuzzy search via [PokemonUtils.similarity] to improve matching.
  */
 @Composable
 fun PokedexScreen(navController: NavController) {
@@ -40,7 +43,13 @@ fun PokedexScreen(navController: NavController) {
     val allSummaries = remember { PokemonService.getAllModels() }
 
     val filteredList = if (searchQuery.isBlank()) allSummaries
-    else allSummaries.filter { it.name.contains(searchQuery, ignoreCase = true) }
+
+    // Support fuzzy search to make it easier for kids to find their Pokémon.
+    else allSummaries
+        .map { it to similarity(it.name, searchQuery) }
+        .filter { it.second >= 0.4 }
+        .sortedByDescending { it.second }
+        .map { it.first }
 
     Box(
         modifier = Modifier

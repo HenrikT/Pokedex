@@ -130,4 +130,56 @@ object PokemonUtils {
             )
         }
     }
+
+    /**
+     * Used to support fuzzy search in the pokédex, making it easier for kids to find their pokémon.
+     *
+     * Returns a similarity score between two strings using Levenshtein distance.
+     *
+     * The score is normalized between 0.0 (completely different) and 1.0 (identical).
+     *
+     * @param s1 First string.
+     * @param s2 Second string.
+     * @return Similarity score as a [Double] from 0.0 to 1.0.
+     */
+    fun similarity(s1: String, s2: String): Double {
+        val l1 = s1.lowercase()
+        val l2 = s2.lowercase()
+        val distance = levenshtein(l1, l2)
+        val maxLen = maxOf(l1.length, l2.length).coerceAtLeast(1)
+        return 1.0 - distance.toDouble() / maxLen
+    }
+
+    /**
+     * Calculates the Levenshtein distance between two strings.
+     *
+     * This algorithm returns the minimum number of single-character edits
+     * (insertions, deletions, or substitutions) required to change one string into the other.
+     *
+     * @param lhs The first string.
+     * @param rhs The second string.
+     * @return The Levenshtein distance as an [Int].
+     */
+    private fun levenshtein(lhs: String, rhs: String): Int {
+        val lhsLen = lhs.length
+        val rhsLen = rhs.length
+
+        val cost = Array(lhsLen + 1) { IntArray(rhsLen + 1) }
+
+        for (i in 0..lhsLen) cost[i][0] = i
+        for (j in 0..rhsLen) cost[0][j] = j
+
+        for (i in 1..lhsLen) {
+            for (j in 1..rhsLen) {
+                val substitutionCost = if (lhs[i - 1] == rhs[j - 1]) 0 else 1
+                cost[i][j] = minOf(
+                    cost[i - 1][j] + 1,
+                    cost[i][j - 1] + 1,
+                    cost[i - 1][j - 1] + substitutionCost
+                )
+            }
+        }
+
+        return cost[lhsLen][rhsLen]
+    }
 }
