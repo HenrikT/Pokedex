@@ -1,9 +1,5 @@
 package com.example.pokedex.data
 
-import android.content.Context
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.*
 import org.junit.Before
@@ -13,79 +9,57 @@ class PokemonServiceTest {
 
     private lateinit var service: IPokemonService
     private lateinit var fakeRepo: FakePokemonRepository
-    private lateinit var mockMyPokemon: IMyPokemonManager
-    private lateinit var context: Context
 
     @Before
     fun setUp() {
         fakeRepo = FakePokemonRepository()
-        mockMyPokemon = mockk(relaxed = true)
-        context = mockk(relaxed = true)
-
-        service = PokemonService(fakeRepo, mockMyPokemon)
+        service = FakePokemonService(fakeRepo)
     }
 
     @Test
-    fun getRandomPokemon_returnsValidPokemonData() = runTest {
-        val result = service.getRandomPokemon()
-
-        assertNotNull(result)
-        assertEquals("bulbasaur", result.name)
-        assertTrue(result.imageUrl.contains("bulba"))
+    fun getAllModels_returnsEmptyByDefault() {
+        val summaries = service.getAllModels()
+        assertTrue(summaries.isEmpty())
     }
 
     @Test
-    fun getPokemonDetail_returnsExpectedPokemon() = runTest {
-        val result = service.getPokemonDetail(1)
+    fun preloadSummaries_populatesListCorrectly() = runTest {
+        val progress = mutableListOf<Int>()
 
-        assertEquals(1, result.id)
-        assertEquals("bulbasaur", result.name)
-        assertTrue(result.entry.isNotBlank())
-        assertTrue(result.types.isNotEmpty())
+        service.preloadModelsWithProgress(total = 1) {
+            progress.add(it)
+        }
+
+        val summaries = service.getAllModels()
+        assertEquals(1, summaries.size)
+        assertEquals("bulbasaur", summaries.first().name)
+        assertTrue(progress.contains(1))
     }
 
     @Test
-    fun isInMyPokemon_returnsTrueAfterAdding() = runTest {
-        val id = 1
+    fun getPokemonDetail_returnsExpectedModel() = runTest {
+        val detail = service.getModel(1)
 
-        coEvery { mockMyPokemon.setMyPokemon(context, id, true) } returns Unit
-        coEvery { mockMyPokemon.isInMyPokemon(context, id) } returns true
-
-        service.setMyPokemon(context, id, true)
-        val result = service.isInMyPokemon(context, id)
-
-        assertTrue(result)
-
-        coVerify { mockMyPokemon.setMyPokemon(context, id, true) }
-        coVerify { mockMyPokemon.isInMyPokemon(context, id) }
+        assertNotNull(detail)
+        assertEquals(1, detail!!.id)
+        assertEquals("bulbasaur", detail.name)
+        assertTrue(detail.spriteUrl.contains("bulba"))
     }
 
     @Test
-    fun isInMyPokemon_returnsFalseByDefault() = runTest {
-        val id = 999
-        coEvery { mockMyPokemon.isInMyPokemon(context, id) } returns false
+    fun getPokemonWithEntry_returnsValidPair() = runTest {
+        val pair = service.getPokemonWithEntry(1)
 
-        val result = service.isInMyPokemon(context, id)
-        assertFalse(result)
-
-        coVerify { mockMyPokemon.isInMyPokemon(context, id) }
+        assertNotNull(pair)
+        assertEquals("bulbasaur", pair!!.first.name)
+        assertTrue(pair.second.contains("seed")) // match mock text
     }
 
     @Test
-    fun setMyPokemon_false_removesFromList() = runTest {
-        val id = 1
+    fun getPokemon_returnsPokemon() = runTest {
+        val pokemon = service.getPokemon(1)
 
-        coEvery { mockMyPokemon.setMyPokemon(context, id, true) } returns Unit
-        coEvery { mockMyPokemon.setMyPokemon(context, id, false) } returns Unit
-        coEvery { mockMyPokemon.isInMyPokemon(context, id) } returns false
-
-        service.setMyPokemon(context, id, true)
-        service.setMyPokemon(context, id, false)
-
-        val result = service.isInMyPokemon(context, id)
-        assertFalse(result)
-
-        coVerify { mockMyPokemon.setMyPokemon(context, id, true) }
-        coVerify { mockMyPokemon.setMyPokemon(context, id, false) }
+        assertNotNull(pokemon)
+        assertEquals("bulbasaur", pokemon!!.name)
     }
 }

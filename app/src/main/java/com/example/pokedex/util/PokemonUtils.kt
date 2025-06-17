@@ -1,7 +1,9 @@
 package com.example.pokedex.util
 
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import com.example.pokedex.model.PokemonDetail
+import co.pokeapi.pokekotlin.model.Pokemon
+import com.example.pokedex.model.PokemonModel
 
 /**
  * Utility class for Pokémon-related operations and constants.
@@ -17,24 +19,53 @@ object PokemonUtils {
     /** Background color used in Pokémon card containers. */
     val PokemonCardContainerBackground = Color(0x7A5E5E5E)
 
+    // -------------------------
+    // Formatting: Full Pokemon
+    // -------------------------
+
     /**
      * Returns the Pokémon's name with the first letter capitalized.
      */
-    fun getName(pokemon: PokemonDetail): String {
+    fun getName(pokemon: Pokemon): String {
         return pokemon.name.replaceFirstChar { it.uppercase() }
     }
 
     /**
      * Returns the Pokémon's ID as a string.
      */
-    fun getId(pokemon: PokemonDetail): String {
+    fun getId(pokemon: Pokemon): String {
         return "#${pokemon.id}"
     }
 
     /**
      * Formats the Pokémon's name with its ID in the form: "Swellow #277".
      */
-    fun getFormattedPokemonName(pokemon: PokemonDetail): String {
+    fun getFormattedPokemonName(pokemon: Pokemon): String {
+        return "${getName(pokemon)} ${getId(pokemon)}"
+    }
+
+    // ----------------------------
+    // Formatting: PokemonDetail
+    // ----------------------------
+
+    /**
+     * Returns the PokémonDetail's name with the first letter capitalized.
+     */
+    fun getName(pokemon: PokemonModel): String {
+        return pokemon.name.replaceFirstChar { it.uppercase() }
+    }
+
+    /**
+     * Returns the PokémonDetail's ID as a string.
+     */
+    fun getId(pokemon: PokemonModel): String {
+        return "#${pokemon.id}"
+    }
+
+    /**
+     * Formats the PokémonDetail's name with its ID in the form: "Swellow #277".
+     */
+    fun getFormattedPokemonName(pokemon: PokemonModel): String {
         return "${getName(pokemon)} ${getId(pokemon)}"
     }
 
@@ -75,5 +106,28 @@ object PokemonUtils {
      */
     fun getTypeColor(type: String): Color {
         return typeColors[type.lowercase()] ?: Color.Gray
+    }
+
+    /**
+     * Returns a gradient background brush based on the Pokémon's types.
+     *
+     * If two types are given, a diagonal gradient is used. If only one is available,
+     * a vertical gradient is created from that color.
+     *
+     * @param types A list of Pokémon type names.
+     * @return A [Brush] that represents the type-based background.
+     */
+    fun getTypeBackground(types: List<String>): Brush {
+        return when (types.size) {
+            2 -> Brush.linearGradient(
+                colors = listOf(getTypeColor(types[0]), getTypeColor(types[1])),
+                start = androidx.compose.ui.geometry.Offset(0f, 0f),
+                end = androidx.compose.ui.geometry.Offset(1000f, 1000f)
+            )
+
+            else -> Brush.verticalGradient(
+                colors = listOf(getTypeColor(types.firstOrNull() ?: ""), getTypeColor(types.firstOrNull() ?: ""))
+            )
+        }
     }
 }

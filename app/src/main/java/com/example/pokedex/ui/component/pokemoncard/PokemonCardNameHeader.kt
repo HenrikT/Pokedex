@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.pokedex.model.PokemonDetail
+import co.pokeapi.pokekotlin.model.Pokemon
 import com.example.pokedex.util.PokemonUtils
 import com.example.pokedex.util.PokemonUtils.PokemonCardContainerBackground
 
@@ -25,7 +25,7 @@ import com.example.pokedex.util.PokemonUtils.PokemonCardContainerBackground
  * @param pokemon The Pokémon whose name and ID should be shown.
  */
 @Composable
-fun PokemonCardNameHeader(pokemon: PokemonDetail) {
+fun PokemonCardNameHeader(pokemon: Pokemon) {
     Box(
         modifier = Modifier
             .fillMaxWidth()

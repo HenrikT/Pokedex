@@ -9,11 +9,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import co.pokeapi.pokekotlin.model.Pokemon
 import com.example.pokedex.data.MyPokemonManager
-import com.example.pokedex.data.PokemonRepository
 import com.example.pokedex.data.PokemonService
-import com.example.pokedex.model.PokemonDetail
-import com.example.pokedex.ui.component.PokeBallButton
+import com.example.pokedex.ui.component.button.PokeBallButton
 import com.example.pokedex.ui.component.pokemoncard.PokemonCard
 import com.example.pokedex.ui.navigation.BottomNavItem
 import kotlinx.coroutines.launch
@@ -33,27 +32,20 @@ fun PokemonDetailScreen(
     pokemonId: Int
 ) {
     val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
-
-    val repository = remember { PokemonRepository() }
-    val service = remember { PokemonService(repository, MyPokemonManager) }
-
     var isCaught by remember { mutableStateOf(false) }
+    var pokemonWithEntry by remember { mutableStateOf<Pair<Pokemon, String>?>(null) }
+    val scope = rememberCoroutineScope()
 
-    val showCatchButton = remember {
-        navController.previousBackStackEntry?.destination?.route == BottomNavItem.MyPokemon.route
+    // Determine the previous route so we can decide whether to show the catch button
+    val previousRoute = remember {
+        navController.previousBackStackEntry?.destination?.route
     }
+    val showCatchButton = previousRoute == BottomNavItem.MyPokemon.route
 
-    val pokemonState = produceState<PokemonDetail?>(initialValue = null, key1 = pokemonId) {
-        value = service.getPokemonDetail(pokemonId)
-    }
-
-    LaunchedEffect(pokemonState.value?.id) {
-        if (showCatchButton) {
-            pokemonState.value?.id?.let { id ->
-                isCaught = service.isInMyPokemon(context, id)
-            }
-        }
+    // Fetch Pokémon and update catch status when ID changes
+    LaunchedEffect(pokemonId) {
+        isCaught = MyPokemonManager.isInMyPokemon(context, pokemonId)
+        pokemonWithEntry = PokemonService.getPokemonWithEntry(pokemonId)
     }
 
     Box(
@@ -62,15 +54,18 @@ fun PokemonDetailScreen(
             .padding(16.dp)
             .testTag("PokemonDetailScreen")
     ) {
-        val pokemon = pokemonState.value
 
-        if (pokemon != null) {
+        if (pokemonWithEntry != null) {
+            val pokemon = pokemonWithEntry!!.first
+            val entry = pokemonWithEntry!!.second
+
             Column(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 PokemonCard(
                     pokemon = pokemon,
+                    entry = entry,
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
@@ -86,9 +81,9 @@ fun PokemonDetailScreen(
                         PokeBallButton(
                             isCaught = isCaught,
                             onToggleCatch = {
-                                coroutineScope.launch {
-                                    MyPokemonManager.toggleMyPokemon(context, pokemon.id)
-                                    isCaught = MyPokemonManager.isInMyPokemon(context, pokemon.id)
+                                isCaught = !isCaught
+                                scope.launch {
+                                    MyPokemonManager.toggleMyPokemon(context, pokemonId)
                                 }
                             }
                         )

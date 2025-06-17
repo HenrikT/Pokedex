@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.dp
-import com.example.pokedex.model.PokemonDetail
+import co.pokeapi.pokekotlin.model.Pokemon
 import com.example.pokedex.ui.component.PokemonImage
 import com.example.pokedex.util.PokemonUtils
 
@@ -23,10 +23,10 @@ import com.example.pokedex.util.PokemonUtils
  * Used on the home screen to visually present the currently selected Pokémon.
  * This card occupies all available vertical space above the control buttons.
  *
- * @param pokemon The [PokemonDetail] model containing ID, name, and image URL.
+ * @param pokemon The [Pokemon] model containing ID, name, and image URL.
  */
 @Composable
-fun PokemonCard(pokemon: PokemonDetail, modifier: Modifier = Modifier) {
+fun PokemonCard(pokemon: Pokemon, entry: String, modifier: Modifier) {
 
     // Create a gradient to be used for the background using the colors of the types
     // If only one type, use the color directly
@@ -67,7 +67,7 @@ fun PokemonCard(pokemon: PokemonDetail, modifier: Modifier = Modifier) {
                 PokemonImage(pokemon)
 
                 // Show the info box
-                PokemonCardInfoBox(pokemon)
+                PokemonCardInfoBox(pokemon, entry)
             }
         }
     }

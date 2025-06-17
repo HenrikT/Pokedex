@@ -1,4 +1,4 @@
-package com.example.pokedex.ui.component
+package com.example.pokedex.ui.component.button
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween

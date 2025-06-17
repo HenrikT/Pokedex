@@ -1,6 +1,5 @@
 package com.example.pokedex.ui.screens
 
-import android.R.attr.onClick
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -9,14 +8,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import co.pokeapi.pokekotlin.model.Pokemon
 import com.example.pokedex.data.MyPokemonManager
-import com.example.pokedex.data.IPokemonRepository
 import com.example.pokedex.data.MyPokemonManager.isInMyPokemon
-import com.example.pokedex.data.PokemonRepository
 import com.example.pokedex.data.PokemonService
-import com.example.pokedex.model.PokemonDetail
-import com.example.pokedex.ui.component.DieButton
-import com.example.pokedex.ui.component.PokeBallButton
+import com.example.pokedex.ui.component.button.DieButton
+import com.example.pokedex.ui.component.button.PokeBallButton
 import com.example.pokedex.ui.component.pokemoncard.PokemonCard
 import com.example.pokedex.util.PokemonUtils.MAX_POKEMON_ID
 import kotlinx.coroutines.launch
@@ -31,26 +28,28 @@ import kotlin.random.Random
 @Composable
 fun FeaturedScreen() {
     val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
+    val startNumber = 1
+    val endNumber = MAX_POKEMON_ID
 
-    val startId = 1
-    val endId = MAX_POKEMON_ID
-
-    val repository: IPokemonRepository = PokemonRepository()
-    val service = PokemonService(repository, MyPokemonManager)
-
-    val initialId = remember { Random.nextInt(startId, endId) }
-    var currentId by remember { mutableIntStateOf(initialId) }
-
+    // Only generate this once (on app start)
+    val initialRandomId = remember { Random.nextInt(startNumber, endNumber) }
+    var randomId by remember { mutableIntStateOf(initialRandomId) }
     var isCaught by remember { mutableStateOf(false) }
 
-    val pokemonState = produceState<PokemonDetail?>(initialValue = null, key1 = currentId) {
-        value = service.getPokemonDetail(currentId)
-    }
+    val coroutineScope = rememberCoroutineScope()
 
-    LaunchedEffect(pokemonState.value?.id) {
-        pokemonState.value?.id?.let { id ->
-            isCaught = service.isInMyPokemon(context, id)
+    // Load Pokémon + Pokédex entry on random ID change
+    val pokemonWithEntryState =
+        produceState<Pair<Pokemon, String>?>(initialValue = null, key1 = randomId) {
+            value = PokemonService.getPokemonWithEntry(randomId)
+        }
+
+    val pokemonWithEntry = pokemonWithEntryState.value
+
+    // Check if Pokémon is already caught when data changes
+    LaunchedEffect(pokemonWithEntry?.first?.id) {
+        pokemonWithEntry?.first?.id?.let { id ->
+            isCaught = isInMyPokemon(context, id)
         }
     }
 
@@ -60,15 +59,16 @@ fun FeaturedScreen() {
             .padding(16.dp)
             .testTag("FeaturedScreen")
     ) {
-        val pokemon = pokemonState.value
 
-        if (pokemon != null) {
+        if (pokemonWithEntry != null) {
             Column(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
+                // Show a pokémon card at the top with name, sprite, types, and pokédex entry
                 PokemonCard(
-                    pokemon = pokemon,
+                    pokemon = pokemonWithEntry.first,
+                    entry = pokemonWithEntry.second,
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
@@ -81,11 +81,16 @@ fun FeaturedScreen() {
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    // Show a die button to reroll the random pokémon
+                    DieButton {
+                        randomId = Random.nextInt(startNumber, endNumber)
+                    }
+
+                    // Show a poke ball button to catch (favorite) the encountered pokémon
                     PokeBallButton(
                         isCaught = isCaught,
                         onToggleCatch = {
-                            val id = pokemonState.value?.id
-                            if (id != null) {
+                            pokemonWithEntry.first.id.let { id ->
                                 coroutineScope.launch {
                                     MyPokemonManager.toggleMyPokemon(context, id)
                                     isCaught = isInMyPokemon(context, id)
@@ -93,10 +98,6 @@ fun FeaturedScreen() {
                             }
                         }
                     )
-
-                    DieButton {
-                        currentId = Random.nextInt(startId, endId)
-                    }
                 }
             }
         } else {

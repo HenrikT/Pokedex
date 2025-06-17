@@ -11,7 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.pokedex.model.PokemonDetail
+import co.pokeapi.pokekotlin.model.Pokemon
 import com.example.pokedex.util.PokemonUtils.PokemonCardContainerBackground
 
 /**
@@ -20,10 +20,11 @@ import com.example.pokedex.util.PokemonUtils.PokemonCardContainerBackground
  * Used inside [PokemonCard] to wrap type badges and flavor text in a highlighted area,
  * improving readability and visual structure.
  *
- * @param pokemon The Pokémon whose types and entry should be rendered in the info box.
+ * @param pokemon The Pokémon whose types are displayed.
+ * @param entryText The flavor text to display in the info box.
  */
 @Composable
-fun PokemonCardInfoBox(pokemon: PokemonDetail) {
+fun PokemonCardInfoBox(pokemon: Pokemon, entryText: String) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -38,7 +39,7 @@ fun PokemonCardInfoBox(pokemon: PokemonDetail) {
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             PokemonTypeRow(pokemon)
-            PokemonEntryText(pokemon.entry)
+            PokemonEntryText(entryText)
         }
     }
 }

@@ -1,50 +1,61 @@
 package com.example.pokedex.data
 
-import android.content.Context
-import com.example.pokedex.model.PokemonDetail
+import co.pokeapi.pokekotlin.model.Pokemon
+import co.pokeapi.pokekotlin.model.PokemonSpecies
+import com.example.pokedex.model.PokemonModel
 
 /**
- * High-level service interface for accessing and managing Pokémon data.
+ * Interface for accessing Pokémon data.
  *
- * Provides simplified access to Pokémon detail models, random entries,
- * and user-specific "My Pokémon" state.
+ * Exposes core methods for retrieving full Pokémon data, species metadata, and the [PokemonModel] used in the UI.
+ * Also supports preloading for performance optimization.
  */
 interface IPokemonService {
 
     /**
-     * Fetches a random Pokémon with complete detail information.
+     * Returns a list of all available Pokémon models.
      *
-     * Includes name, image, types, and Pokédex entry.
-     *
-     * @return A fully populated [PokemonDetail] instance.
+     * @return Sorted list of [PokemonModel] objects.
      */
-    suspend fun getRandomPokemon(): PokemonDetail
+    fun getAllModels(): List<PokemonModel>
 
     /**
-     * Fetches full detail information for a specific Pokémon by ID.
+     * Returns detailed [Pokemon] data for the given ID.
      *
-     * Includes name, image, types, and Pokédex entry.
-     *
-     * @param id The national Pokédex ID of the Pokémon.
-     * @return A fully populated [PokemonDetail] instance.
+     * @param id The Pokédex ID.
+     * @return The [Pokemon] object or `null` if not found.
      */
-    suspend fun getPokemonDetail(id: Int): PokemonDetail
+    suspend fun getPokemon(id: Int): Pokemon?
 
     /**
-     * Checks whether the specified Pokémon is in "My Pokémon".
+     * Returns [PokemonSpecies] data for the given ID.
      *
-     * @param context The context used to access local user preferences.
-     * @param id The Pokémon's ID.
-     * @return True if the Pokémon is saved in "My Pokémon"; false otherwise.
+     * @param id The species ID.
+     * @return The [PokemonSpecies] object or `null` if not found.
      */
-    suspend fun isInMyPokemon(context: Context, id: Int): Boolean
+    suspend fun getSpecies(id: Int): PokemonSpecies?
 
     /**
-     * Updates the presence of the specified Pokémon in "My Pokémon".
+     * Returns both the Pokémon and its Pokédex entry in English.
      *
-     * @param context The context used to access local user preferences.
-     * @param id The Pokémon's ID.
-     * @param save Whether to save the Pokémon in "My Pokémon".
+     * @param id The Pokédex ID.
+     * @return A pair of Pokémon and its flavor text entry, or `null` if not available.
      */
-    suspend fun setMyPokemon(context: Context, id: Int, save: Boolean)
+    suspend fun getPokemonWithEntry(id: Int): Pair<Pokemon, String>?
+
+    /**
+     * Preloads Pokémon models and reports progress.
+     *
+     * @param total Number of Pokémon to load.
+     * @param onProgress Callback invoked with current progress count.
+     */
+    suspend fun preloadModelsWithProgress(total: Int, onProgress: (Int) -> Unit)
+
+    /**
+     * Returns a Pokémon model by ID.
+     *
+     * @param id The Pokédex ID.
+     * @return A [PokemonModel] instance, or `null` if not found.
+     */
+    suspend fun getModel(id: Int): PokemonModel?
 }

@@ -7,24 +7,14 @@ import com.example.pokedex.util.ILogger
 import com.example.pokedex.util.Logger
 
 /**
- * Implementation of [IPokemonRepository] that retrieves Pokémon data using the PokéKotlin client.
+ * Repository for retrieving Pokémon data from the PokéAPI.
  *
- * Connects to the PokéAPI and returns basic Pokémon information by ID.
+ * All requests are safe and return null on failure, with errors logged.
  */
-class PokemonRepository : IPokemonRepository {
+object PokemonRepository : IPokemonRepository {
 
-    /**
-     * Logger used for reporting data-fetch errors.
-     * Can be overridden for test environments.
-     */
     var logger: ILogger = Logger
 
-    /**
-     * Retrieves the main Pokémon data object for the given ID.
-     *
-     * @param id The Pokédex ID of the Pokémon to retrieve.
-     * @return A [Pokemon] instance, or `null` if the request fails.
-     */
     override suspend fun getPokemon(id: Int): Pokemon? {
         return try {
             PokeApi.getPokemon(id).getOrNull()
@@ -34,15 +24,15 @@ class PokemonRepository : IPokemonRepository {
         }
     }
 
-    /**
-     * Retrieves both the Pokémon and its Pokédex flavor text.
-     *
-     * Uses [getPokemon] and [getSpecies] to extract the English description.
-     * If either request fails, returns null.
-     *
-     * @param id The Pokédex ID of the Pokémon to retrieve.
-     * @return A pair of [Pokemon] and English flavor text, or `null` if not found.
-     */
+    override suspend fun getSpecies(id: Int): PokemonSpecies? {
+        return try {
+            PokeApi.getPokemonSpecies(id).getOrNull()
+        } catch (e: Exception) {
+            logger.e("PokemonRepository", "Failed to get species $id", e)
+            null
+        }
+    }
+
     override suspend fun getPokemonWithEntry(id: Int): Pair<Pokemon, String>? {
         val pokemon = getPokemon(id) ?: return null
         val species = getSpecies(pokemon.species.id) ?: return null
@@ -55,24 +45,5 @@ class PokemonRepository : IPokemonRepository {
             ?: "No entry found"
 
         return pokemon to entry
-    }
-
-    /**
-     * Retrieves species-level metadata for a given Pokémon.
-     *
-     * Used to access additional details like Pokédex entries, growth rate,
-     * egg groups, and localized flavor text. This is required because the
-     * core Pokémon object does not include these fields.
-     *
-     * @param id The species ID associated with a Pokémon.
-     * @return A [PokemonSpecies] object, or `null` if the request fails.
-     */
-    private suspend fun getSpecies(id: Int): PokemonSpecies? {
-        return try {
-            PokeApi.getPokemonSpecies(id).getOrNull()
-        } catch (e: Exception) {
-            logger.e("PokemonRepository", "Failed to get species $id", e)
-            null
-        }
     }
 }

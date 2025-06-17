@@ -1,6 +1,5 @@
 package com.example.pokedex.ui.screens
 
-import PokemonTile
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,27 +27,25 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.pokedex.data.MyPokemonManager
-import com.example.pokedex.data.PokemonRepository
 import com.example.pokedex.data.PokemonService
-import com.example.pokedex.model.PokemonDetail
+import com.example.pokedex.model.PokemonModel
+import com.example.pokedex.ui.component.pokemontile.PokemonTile
 
 /**
  * Displays a grid of Pokémon that the user has caught ("My Pokémon").
  *
  * This screen:
  * - Observes the user's saved Pokémon via a flow.
- * - Loads each corresponding [PokemonDetail] object using cached detail data.
+ * - Loads each corresponding [PokemonModel] object using cached detail data.
  * - Renders them in a 2-column grid layout using [PokemonTile].
  * - Shows a spinner while loading or a fallback message if the list is empty.
  */
 @Composable
 fun MyPokemonScreen(navController: NavController) {
     val context = LocalContext.current
-    val repository = PokemonRepository()
-    val service = PokemonService(repository, MyPokemonManager)
 
     var myPokemon by remember { mutableStateOf<Set<String>>(emptySet()) }
-    var pokemonList by remember { mutableStateOf<List<PokemonDetail>>(emptyList()) }
+    var pokemonList by remember { mutableStateOf<List<PokemonModel>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
 
     // Load and watch the user's saved Pokémon list
@@ -57,10 +54,8 @@ fun MyPokemonScreen(navController: NavController) {
             myPokemon = idSet
 
             if (idSet.isNotEmpty()) {
-                // Convert string IDs to Pokémon detail objects
-                val fetched: List<PokemonDetail> = idSet.mapNotNull { idStr ->
-                    val id = idStr.toIntOrNull()
-                    id?.let { service.getPokemonDetail(it) }
+                val fetched = idSet.mapNotNull { idStr ->
+                    PokemonService.getModel(idStr.toInt())
                 }
                 pokemonList = fetched
             } else {
