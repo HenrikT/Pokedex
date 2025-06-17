@@ -14,19 +14,19 @@ class MainActivityTest {
 
     @Test
     fun bottomNav_clickingTabsNavigatesToCorrectScreen() {
-        // Initial screen is Home
-        composeTestRule.onNodeWithTag("HomeScreen", useUnmergedTree = true).assertExists()
+        // Initial screen is Featured
+        composeTestRule.onNodeWithTag("FeaturedScreen", useUnmergedTree = true).assertExists()
 
-        // Navigate to Library
-        composeTestRule.onNodeWithText("Library").performClick()
-        composeTestRule.onNodeWithTag("LibraryScreen").assertExists()
+        // Navigate to Pokédex
+        composeTestRule.onNodeWithText("Pokédex").performClick()
+        composeTestRule.onNodeWithTag("PokedexScreen").assertExists()
 
-        // Navigate to Bookmarks
-        composeTestRule.onNodeWithText("Bookmarks").performClick()
-        composeTestRule.onNodeWithTag("BookmarksScreen").assertExists()
+        // Navigate to My Pokémon
+        composeTestRule.onNodeWithText("My Pokémon").performClick()
+        composeTestRule.onNodeWithTag("MyPokemonScreen").assertExists()
 
-        // Navigate back to Home
-        composeTestRule.onNodeWithText("Home").performClick()
-        composeTestRule.onNodeWithTag("HomeScreen").assertExists()
+        // Navigate back to Featured
+        composeTestRule.onNodeWithText("Featured").performClick()
+        composeTestRule.onNodeWithTag("FeaturedScreen").assertExists()
     }
 }
