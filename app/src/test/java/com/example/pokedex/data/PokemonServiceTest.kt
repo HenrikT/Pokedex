@@ -52,7 +52,7 @@ class PokemonServiceTest {
 
         assertNotNull(pair)
         assertEquals("bulbasaur", pair!!.first.name)
-        assertTrue(pair.second.contains("seed")) // match mock text
+        assertTrue(pair.second.contains("seed"))
     }
 
     @Test
