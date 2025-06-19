@@ -41,14 +41,21 @@ fun PokedexScreen(navController: NavController) {
     var searchQuery by remember { mutableStateOf("") }
 
     val allPokemonModels = remember { PokemonService.getAllModels() }
-    val filteredList = if (searchQuery.isBlank()) allPokemonModels
 
     // Support fuzzy search to make it easier for kids to find their Pokémon.
-    else allPokemonModels
-        .map { it to similarity(it.name, searchQuery) }
-        .filter { it.second >= 0.4 }
-        .sortedByDescending { it.second }
-        .map { it.first }
+    val filteredList = if (searchQuery.isBlank()) {
+        allPokemonModels
+    } else {
+        allPokemonModels.mapNotNull { model ->
+            val score = when {
+                model.id.toString().startsWith(searchQuery) -> 1.0
+                similarity(model.name, searchQuery) >= 0.4 -> similarity(model.name, searchQuery)
+                else -> null
+            }
+            score?.let { model to it }
+        }.sortedByDescending { it.second }
+            .map { it.first }
+    }
 
     Box(
         modifier = Modifier
