@@ -18,8 +18,8 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.launch
 import com.example.pokedex.R
+import kotlinx.coroutines.launch
 
 /**
  * A composable button styled as a Poké Ball for toggling Pokémon in "My Pokémon".

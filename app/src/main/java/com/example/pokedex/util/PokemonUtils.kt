@@ -126,7 +126,10 @@ object PokemonUtils {
             )
 
             else -> Brush.verticalGradient(
-                colors = listOf(getTypeColor(types.firstOrNull() ?: ""), getTypeColor(types.firstOrNull() ?: ""))
+                colors = listOf(
+                    getTypeColor(types.firstOrNull() ?: ""),
+                    getTypeColor(types.firstOrNull() ?: "")
+                )
             )
         }
     }

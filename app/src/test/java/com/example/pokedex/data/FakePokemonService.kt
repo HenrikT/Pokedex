@@ -21,7 +21,8 @@ class FakePokemonService(
 
     override suspend fun getSpecies(id: Int): PokemonSpecies? = fakeRepo.getSpecies(id)
 
-    override suspend fun getPokemonWithEntry(id: Int): Pair<Pokemon, String>? = fakeRepo.getPokemonWithEntry(id)
+    override suspend fun getPokemonWithEntry(id: Int): Pair<Pokemon, String>? =
+        fakeRepo.getPokemonWithEntry(id)
 
     override suspend fun preloadModelsWithProgress(total: Int, onProgress: (Int) -> Unit) {
         summaries.clear()
