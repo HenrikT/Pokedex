@@ -2,6 +2,7 @@ package com.example.pokedex.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -27,7 +28,7 @@ fun FeaturedScreen() {
     val endNumber = MAX_POKEMON_ID
 
     val initialRandomId = remember { Random.nextInt(startNumber, endNumber) }
-    var randomId by remember { mutableIntStateOf(initialRandomId) }
+    var randomId by rememberSaveable { mutableIntStateOf(Random.nextInt(1, MAX_POKEMON_ID + 1)) }
 
     var isShinyMap by remember { mutableStateOf(mapOf<Int, Boolean>()) }
     var isCaught by remember { mutableStateOf(false) }

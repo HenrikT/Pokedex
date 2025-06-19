@@ -62,9 +62,14 @@ fun BottomNavBar(navController: NavController) {
                 selected = selected,
                 onClick = {
                     if (!selected) {
-                        // Navigate to the selected route, clearing any previous destinations
                         navController.navigate(item.route) {
-                            popUpTo(0)
+                            // Prevent full recomposition of destinations when switching tabs.
+                            // Keeps screen state (like selected Pokémon) intact using save/restore.
+                            popUpTo(navController.graph.startDestinationId) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
                         }
                     }
                 }
