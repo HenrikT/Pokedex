@@ -52,7 +52,7 @@ fun PokemonDetailScreen(
 
     // Load Pokémon + Pokédex entry on random ID change
     val allPokemonModels = remember { PokemonService.getAllModels() }
-    val pokemon = allPokemonModels[pokemonId]
+    val pokemon = allPokemonModels.firstOrNull { it.id == pokemonId }
 
     // Fetch Pokémon and update catch status when ID changes
     LaunchedEffect(pokemonId) {
@@ -69,14 +69,16 @@ fun PokemonDetailScreen(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            PokemonCard(
-                pokemon = pokemon,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-            )
+            pokemon?.let {
+                PokemonCard(
+                    pokemon = it,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                )
+            }
 
-            if (showCatchButton) {
+            if (showCatchButton && pokemon != null) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()

@@ -51,11 +51,11 @@ fun FeaturedScreen() {
 
     // Load Pokémon + Pokédex entry on random ID change
     val allPokemonModels = remember { PokemonService.getAllModels() }
-    val pokemon = allPokemonModels[randomId]
+    val pokemon = allPokemonModels.firstOrNull { it.id == randomId }
 
     // Check if Pokémon is already caught when data changes
-    LaunchedEffect(pokemon.id) {
-        pokemon.id.let { id ->
+    LaunchedEffect(pokemon?.id) {
+        pokemon?.id?.let { id ->
             isCaught = isInMyPokemon(context, id)
         }
     }
@@ -71,12 +71,14 @@ fun FeaturedScreen() {
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             // Show a pokémon card at the top with name, sprite, types, and pokédex entry
-            PokemonCard(
-                pokemon = pokemon,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-            )
+            pokemon?.let {
+                PokemonCard(
+                    pokemon = it,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                )
+            }
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -93,7 +95,7 @@ fun FeaturedScreen() {
                 PokeBallButton(
                     isCaught = isCaught,
                     onToggleCatch = {
-                        pokemon.let { it ->
+                        pokemon?.let {
                             coroutineScope.launch {
                                 MyPokemonManager.toggleMyPokemon(context, it.id)
                                 isCaught = isInMyPokemon(context, it.id)
