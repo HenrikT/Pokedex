@@ -67,3 +67,7 @@ All tests can be run directly from Android Studio or via Gradle using:
 ./gradlew test                   # Runs unit tests
 ./gradlew connectedAndroidTest  # Runs instrumented UI tests
 ```
+
+## 📄 License
+
+This project is licensed under the MIT license. You are free to use, modify, and distribute it with proper attribution.
