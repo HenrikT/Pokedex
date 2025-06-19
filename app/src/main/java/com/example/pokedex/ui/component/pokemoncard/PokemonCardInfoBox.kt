@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.pokedex.model.PokemonModel
 import com.example.pokedex.ui.component.FlavorTextBox
-import com.example.pokedex.util.PokemonUtils
 import com.example.pokedex.util.PokemonUtils.PokemonCardContainerBackground
 
 /**

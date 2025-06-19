@@ -28,8 +28,8 @@ import com.example.pokedex.model.PokemonModel
 import com.example.pokedex.util.PokemonUtils.getFrontSpriteUrl
 import com.example.pokedex.util.PokemonUtils.getId
 import com.example.pokedex.util.PokemonUtils.getName
-import com.example.pokedex.util.PokemonUtils.getTypeBackground
 import com.example.pokedex.util.PokemonUtils.getShinyFrontSpriteUrl
+import com.example.pokedex.util.PokemonUtils.getTypeBackground
 
 /**
  * Displays a compact tile card for a Pokémon with name, ID, and sprite.
