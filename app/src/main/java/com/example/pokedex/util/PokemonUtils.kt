@@ -2,7 +2,6 @@ package com.example.pokedex.util
 
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import co.pokeapi.pokekotlin.model.Pokemon
 import co.pokeapi.pokekotlin.model.PokemonSpeciesFlavorText
 import com.example.pokedex.model.PokemonModel
 
@@ -47,27 +46,6 @@ object PokemonUtils {
      */
     fun getFrontSpriteUrl(model: PokemonModel): String? {
         return model.spriteUrls.frontDefault
-    }
-
-    /**
-     * Returns the Pokémon's name with the first letter capitalized.
-     */
-    fun getName(pokemon: Pokemon): String {
-        return pokemon.name.replaceFirstChar { it.uppercase() }
-    }
-
-    /**
-     * Returns the Pokémon's ID as a string.
-     */
-    fun getId(pokemon: Pokemon): String {
-        return "#${pokemon.id}"
-    }
-
-    /**
-     * Formats the Pokémon's name with its ID in the form: "Swellow #277".
-     */
-    fun getFormattedPokemonName(pokemon: Pokemon): String {
-        return "${getName(pokemon)} ${getId(pokemon)}"
     }
 
     /**
