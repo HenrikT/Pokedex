@@ -57,10 +57,6 @@ class FakePokemonRepository : IPokemonRepository {
         )
     }
 
-    override suspend fun getPokemonWithEntry(id: Int): Pair<Pokemon, String>? {
-        return createFakePokemon(id) to "A strange seed was planted on its back at birth. The plant sprouts and grows with this Pokémon."
-    }
-
     private fun createFakePokemon(id: Int): Pokemon {
         return Pokemon(
             id = id,
@@ -70,7 +66,10 @@ class FakePokemonRepository : IPokemonRepository {
             isDefault = true,
             order = 1,
             weight = 69,
-            species = NamedApiResource(name = "bulbasaur", url = "https://pokeapi.co/api/v2/pokemon-species/1/"),
+            species = NamedApiResource(
+                name = "bulbasaur",
+                url = "https://pokeapi.co/api/v2/pokemon-species/1/"
+            ),
             abilities = emptyList(),
             forms = emptyList(),
             gameIndices = emptyList(),

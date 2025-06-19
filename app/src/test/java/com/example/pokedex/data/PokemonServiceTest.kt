@@ -2,7 +2,9 @@ package com.example.pokedex.data
 
 import com.example.pokedex.util.PokemonUtils.getEnglishFlavorText
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 

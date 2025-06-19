@@ -23,14 +23,12 @@ class FakePokemonService(
 
     override suspend fun getModel(id: Int): PokemonModel? {
         val pokemon = fakeRepo.getPokemon(id) ?: return null
-        val species = fakeRepo.getSpecies(pokemon.species.id) ?: return null
 
         return PokemonModel(
             id = pokemon.id,
             name = pokemon.name,
             spriteUrls = pokemon.sprites,
-            types = pokemon.types,
-            flavorTextEntries = species.flavorTextEntries
+            types = pokemon.types
         )
     }
 
