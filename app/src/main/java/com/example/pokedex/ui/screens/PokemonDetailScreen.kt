@@ -56,7 +56,7 @@ fun PokemonDetailScreen(
 
     // Fetch Pokémon and update catch status when ID changes
     LaunchedEffect(pokemonId) {
-        isCaught = MyPokemonManager.isInMyPokemon(context, pokemonId)
+        isCaught = MyPokemonManager.isCaught(context, pokemonId)
     }
 
     Box(
@@ -90,7 +90,7 @@ fun PokemonDetailScreen(
                         onToggleCatch = {
                             isCaught = !isCaught
                             scope.launch {
-                                MyPokemonManager.toggleMyPokemon(context, pokemonId)
+                                MyPokemonManager.toggleCaught(context, pokemonId)
                             }
                         }
                     )

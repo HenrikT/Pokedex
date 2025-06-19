@@ -48,9 +48,9 @@ fun MyPokemonScreen(navController: NavController) {
     var pokemonList by remember { mutableStateOf<List<PokemonModel>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
 
-    // Load and watch the user's saved Pokémon list
+    // Load and watch the user's caught Pokémon
     LaunchedEffect(Unit) {
-        MyPokemonManager.getMyPokemon(context).collect { idSet ->
+        MyPokemonManager.getCaughtPokemon(context).collect { idSet ->
             myPokemon = idSet
 
             if (idSet.isNotEmpty()) {

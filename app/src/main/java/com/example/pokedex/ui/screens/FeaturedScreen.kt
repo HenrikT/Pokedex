@@ -20,8 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
-import com.example.pokedex.data.MyPokemonManager
-import com.example.pokedex.data.MyPokemonManager.isInMyPokemon
+import com.example.pokedex.data.MyPokemonManager.isCaught
+import com.example.pokedex.data.MyPokemonManager.toggleCaught
 import com.example.pokedex.data.PokemonService
 import com.example.pokedex.ui.component.button.DieButton
 import com.example.pokedex.ui.component.button.PokeBallButton
@@ -56,7 +56,7 @@ fun FeaturedScreen() {
     // Check if Pokémon is already caught when data changes
     LaunchedEffect(pokemon?.id) {
         pokemon?.id?.let { id ->
-            isCaught = isInMyPokemon(context, id)
+            isCaught = isCaught(context, id)
         }
     }
 
@@ -97,8 +97,8 @@ fun FeaturedScreen() {
                     onToggleCatch = {
                         pokemon?.let {
                             coroutineScope.launch {
-                                MyPokemonManager.toggleMyPokemon(context, it.id)
-                                isCaught = isInMyPokemon(context, it.id)
+                                toggleCaught(context, it.id)
+                                isCaught = isCaught(context, it.id)
                             }
                         }
                     }
