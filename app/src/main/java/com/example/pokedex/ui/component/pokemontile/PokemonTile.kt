@@ -12,23 +12,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.pokedex.model.PokemonModel
+import com.example.pokedex.util.PokemonUtils.getFrontSpriteUrl
 import com.example.pokedex.util.PokemonUtils.getId
 import com.example.pokedex.util.PokemonUtils.getName
 import com.example.pokedex.util.PokemonUtils.getTypeBackground
 
 /**
- * Displays a Pokémon card with name, ID, and sprite image.
+ * Displays a compact tile card for a Pokémon with name, ID, and sprite.
  *
- * This is used in grid layouts like "My Pokémon" to present individual Pokémon in a compact tile format.
- * Background color reflects Pokémon's type(s) for visual theming.
+ * This is used in grid views such as "My Pokémon" or the full Pokédex list.
+ * The card includes a background gradient based on the Pokémon's type(s)
+ * and navigates to the detail screen when clicked.
  *
- * @param navController Used to navigate to the Pokémon detail view when the tile is tapped.
- * @param pokemon The Pokémon to render in this tile.
+ * @param navController The navigation controller used to open the Pokémon detail page.
+ * @param pokemon The [PokemonModel] instance to render in this tile.
  */
 @Composable
 fun PokemonTile(navController: NavController, pokemon: PokemonModel) {
@@ -70,7 +72,7 @@ fun PokemonTile(navController: NavController, pokemon: PokemonModel) {
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Image(
-                    painter = rememberAsyncImagePainter(pokemon.spriteUrl),
+                    painter = rememberAsyncImagePainter(getFrontSpriteUrl(pokemon)),
                     contentDescription = "${getName(pokemon)} image",
                     modifier = Modifier
                         .fillMaxWidth()

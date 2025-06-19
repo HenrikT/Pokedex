@@ -1,7 +1,6 @@
 package com.example.pokedex.ui.screens
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -9,7 +8,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import co.pokeapi.pokekotlin.model.Pokemon
 import com.example.pokedex.data.MyPokemonManager
 import com.example.pokedex.data.PokemonService
 import com.example.pokedex.ui.component.button.PokeBallButton
@@ -33,7 +31,6 @@ fun PokemonDetailScreen(
 ) {
     val context = LocalContext.current
     var isCaught by remember { mutableStateOf(false) }
-    var pokemonWithEntry by remember { mutableStateOf<Pair<Pokemon, String>?>(null) }
     val scope = rememberCoroutineScope()
 
     // Determine the previous route so we can decide whether to show the catch button
@@ -42,10 +39,13 @@ fun PokemonDetailScreen(
     }
     val showCatchButton = previousRoute == BottomNavItem.MyPokemon.route
 
+    // Load Pokémon + Pokédex entry on random ID change
+    val allPokemonModels = remember { PokemonService.getAllModels() }
+    val pokemon = allPokemonModels[pokemonId]
+
     // Fetch Pokémon and update catch status when ID changes
     LaunchedEffect(pokemonId) {
         isCaught = MyPokemonManager.isInMyPokemon(context, pokemonId)
-        pokemonWithEntry = PokemonService.getPokemonWithEntry(pokemonId)
     }
 
     Box(
@@ -54,44 +54,35 @@ fun PokemonDetailScreen(
             .padding(16.dp)
             .testTag("PokemonDetailScreen")
     ) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            PokemonCard(
+                pokemon = pokemon,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+            )
 
-        if (pokemonWithEntry != null) {
-            val pokemon = pokemonWithEntry!!.first
-            val entry = pokemonWithEntry!!.second
-
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.SpaceBetween
-            ) {
-                PokemonCard(
-                    pokemon = pokemon,
-                    entry = entry,
+            if (showCatchButton) {
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(1f)
-                )
-
-                if (showCatchButton) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 16.dp, bottom = 8.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        PokeBallButton(
-                            isCaught = isCaught,
-                            onToggleCatch = {
-                                isCaught = !isCaught
-                                scope.launch {
-                                    MyPokemonManager.toggleMyPokemon(context, pokemonId)
-                                }
+                        .padding(top = 16.dp, bottom = 8.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    PokeBallButton(
+                        isCaught = isCaught,
+                        onToggleCatch = {
+                            isCaught = !isCaught
+                            scope.launch {
+                                MyPokemonManager.toggleMyPokemon(context, pokemonId)
                             }
-                        )
-                    }
+                        }
+                    )
                 }
             }
-        } else {
-            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
     }
 }

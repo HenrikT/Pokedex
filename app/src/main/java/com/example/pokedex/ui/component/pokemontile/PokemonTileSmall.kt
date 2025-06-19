@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.pokedex.model.PokemonModel
+import com.example.pokedex.util.PokemonUtils.getFrontSpriteUrl
 import com.example.pokedex.util.PokemonUtils.getId
 import com.example.pokedex.util.PokemonUtils.getName
 import com.example.pokedex.util.PokemonUtils.getTypeBackground
@@ -63,7 +64,7 @@ fun PokemonTileSmall(pokemon: PokemonModel, navController: NavController) {
             )
 
             Image(
-                painter = rememberAsyncImagePainter(pokemon.spriteUrl),
+                painter = rememberAsyncImagePainter(getFrontSpriteUrl(pokemon)),
                 contentDescription = "${getName(pokemon)} image",
                 modifier = Modifier
                     .fillMaxWidth(0.85f)

@@ -13,19 +13,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import co.pokeapi.pokekotlin.model.Pokemon
+import com.example.pokedex.model.PokemonModel
 import com.example.pokedex.util.PokemonUtils
 import com.example.pokedex.util.PokemonUtils.PokemonCardContainerBackground
 
 /**
- * Header displaying the Pokémon's name and ID with a styled background.
+ * Header displaying a Pokémon's name and ID with a styled background.
  *
  * Used at the top of [PokemonCard] to clearly present the Pokémon's identity.
  *
- * @param pokemon The Pokémon whose name and ID should be shown.
+ * @param pokemon The [PokemonModel] whose name and ID should be shown.
  */
 @Composable
-fun PokemonCardNameHeader(pokemon: Pokemon) {
+fun PokemonCardNameHeader(pokemon: PokemonModel) {
     Box(
         modifier = Modifier
             .fillMaxWidth()

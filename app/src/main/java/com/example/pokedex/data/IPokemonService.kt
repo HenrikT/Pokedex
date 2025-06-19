@@ -36,12 +36,16 @@ interface IPokemonService {
     suspend fun getSpecies(id: Int): PokemonSpecies?
 
     /**
-     * Returns both the Pokémon and its Pokédex entry in English.
+     * Returns a full Pokémon model for a given ID.
      *
-     * @param id The Pokédex ID.
-     * @return A pair of Pokémon and its flavor text entry, or `null` if not available.
+     * Loads both the basic Pokémon data and species metadata, including all
+     * Pokédex flavor text entries. Used for displaying detailed Pokémon information
+     * in the UI without fetching data multiple times.
+     *
+     * @param id The national Pokédex ID of the Pokémon.
+     * @return A [PokemonModel] containing name, sprite, types, and raw flavor texts, or `null` if not found.
      */
-    suspend fun getPokemonWithEntry(id: Int): Pair<Pokemon, String>?
+    suspend fun getModel(id: Int): PokemonModel?
 
     /**
      * Preloads Pokémon models and reports progress.
@@ -51,11 +55,4 @@ interface IPokemonService {
      */
     suspend fun preloadModelsWithProgress(total: Int, onProgress: (Int) -> Unit)
 
-    /**
-     * Returns a Pokémon model by ID.
-     *
-     * @param id The Pokédex ID.
-     * @return A [PokemonModel] instance, or `null` if not found.
-     */
-    suspend fun getModel(id: Int): PokemonModel?
 }

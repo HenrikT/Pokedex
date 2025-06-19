@@ -9,6 +9,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import java.util.Map.entry
 
 /**
  * High-level service for accessing Pokémon data.
@@ -44,28 +45,16 @@ object PokemonService : IPokemonService {
         }
     }
 
-    override suspend fun getPokemonWithEntry(id: Int): Pair<Pokemon, String>? {
-        val pokemon = getPokemon(id) ?: return null
-        val species = getSpecies(pokemon.species.id) ?: return null
-
-        val entry = species.flavorTextEntries
-            .firstOrNull { it.language.name == "en" }
-            ?.flavorText
-            ?.replace("\n", " ")
-            ?.replace("\u000c", " ")
-            ?: "No entry found"
-
-        return pokemon to entry
-    }
-
     override suspend fun getModel(id: Int): PokemonModel? {
         val pokemon = PokemonRepository.getPokemon(id) ?: return null
+        val species = getSpecies(pokemon.species.id) ?: return null
 
         return PokemonModel(
             id = pokemon.id,
             name = pokemon.name,
-            spriteUrl = pokemon.sprites.frontDefault ?: return null,
-            types = pokemon.types
+            spriteUrls = pokemon.sprites,
+            types = pokemon.types,
+            flavorTextEntries = species.flavorTextEntries
         )
     }
 
@@ -81,13 +70,14 @@ object PokemonService : IPokemonService {
                 val results = coroutineScope {
                     batch.map { id ->
                         async(Dispatchers.IO) {
-                            val pokemon = PokemonRepository.getPokemon(id)
+                            val pokemon = getModel(id)
                             pokemon?.let {
                                 PokemonModel(
                                     id = it.id,
                                     name = it.name,
                                     types = it.types,
-                                    spriteUrl = it.sprites.frontDefault.orEmpty()
+                                    spriteUrls = it.spriteUrls,
+                                    flavorTextEntries = it.flavorTextEntries
                                 )
                             }
                         }

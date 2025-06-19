@@ -40,12 +40,11 @@ import com.example.pokedex.util.PokemonUtils.similarity
 fun PokedexScreen(navController: NavController) {
     var searchQuery by remember { mutableStateOf("") }
 
-    val allSummaries = remember { PokemonService.getAllModels() }
-
-    val filteredList = if (searchQuery.isBlank()) allSummaries
+    val allPokemonModels = remember { PokemonService.getAllModels() }
+    val filteredList = if (searchQuery.isBlank()) allPokemonModels
 
     // Support fuzzy search to make it easier for kids to find their Pokémon.
-    else allSummaries
+    else allPokemonModels
         .map { it to similarity(it.name, searchQuery) }
         .filter { it.second >= 0.4 }
         .sortedByDescending { it.second }
@@ -80,7 +79,7 @@ fun PokedexScreen(navController: NavController) {
             }
         }
 
-        if (allSummaries.isEmpty()) {
+        if (allPokemonModels.isEmpty()) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
     }

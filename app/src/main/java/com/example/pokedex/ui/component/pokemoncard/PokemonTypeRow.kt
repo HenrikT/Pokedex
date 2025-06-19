@@ -7,17 +7,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import co.pokeapi.pokekotlin.model.Pokemon
+import com.example.pokedex.model.PokemonModel
 
 /**
  * Displays all types of a Pokémon as evenly spaced badges in a horizontal row.
  *
  * Each type is rendered using [PokemonTypeBadge] with equal weight distribution.
  *
- * @param pokemon The Pokémon whose types are displayed.
+ * @param pokemon The [PokemonModel] whose types are displayed.
  */
 @Composable
-fun PokemonTypeRow(pokemon: Pokemon) {
+fun PokemonTypeRow(pokemon: PokemonModel) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp),

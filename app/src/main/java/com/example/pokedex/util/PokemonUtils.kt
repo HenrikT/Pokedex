@@ -3,6 +3,7 @@ package com.example.pokedex.util
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import co.pokeapi.pokekotlin.model.Pokemon
+import co.pokeapi.pokekotlin.model.PokemonSpeciesFlavorText
 import com.example.pokedex.model.PokemonModel
 
 /**
@@ -19,9 +20,34 @@ object PokemonUtils {
     /** Background color used in Pokémon card containers. */
     val PokemonCardContainerBackground = Color(0x7A5E5E5E)
 
-    // -------------------------
-    // Formatting: Full Pokemon
-    // -------------------------
+    /**
+     * Returns the first English flavor text from a list of entries.
+     *
+     * Used to extract a readable Pokédex description for display purposes.
+     *
+     * @param entries A list of flavor text entries from a Pokémon species.
+     * @return The first English flavor text, cleaned of formatting characters, or a fallback string if not found.
+     */
+    fun getEnglishFlavorText(entries: List<PokemonSpeciesFlavorText>): String {
+        return entries
+            .firstOrNull { it.language.name == "en" }
+            ?.flavorText
+            ?.replace("\n", " ")
+            ?.replace("\u000c", " ")
+            ?: "No entry found"
+    }
+
+    /**
+     * Returns the front-facing sprite URL for a given Pokémon model.
+     *
+     * This method safely extracts the default front sprite from a [PokemonModel].
+     *
+     * @param model The Pokémon to extract the image URL from.
+     * @return A URL string to the front sprite, or `null` if not available.
+     */
+    fun getFrontSpriteUrl(model: PokemonModel): String? {
+        return model.spriteUrls.frontDefault
+    }
 
     /**
      * Returns the Pokémon's name with the first letter capitalized.
@@ -43,10 +69,6 @@ object PokemonUtils {
     fun getFormattedPokemonName(pokemon: Pokemon): String {
         return "${getName(pokemon)} ${getId(pokemon)}"
     }
-
-    // ----------------------------
-    // Formatting: PokemonDetail
-    // ----------------------------
 
     /**
      * Returns the PokémonDetail's name with the first letter capitalized.

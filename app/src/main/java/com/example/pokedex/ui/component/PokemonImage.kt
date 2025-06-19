@@ -4,8 +4,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import co.pokeapi.pokekotlin.model.Pokemon
 import coil.compose.AsyncImage
+import com.example.pokedex.model.PokemonModel
+import com.example.pokedex.util.PokemonUtils
 
 /**
  * Displays the Pokémon's front-facing sprite image.
@@ -13,14 +14,14 @@ import coil.compose.AsyncImage
  * Uses Coil's [AsyncImage] to load the sprite from the provided URL.
  * If the sprite URL is null, no image is shown.
  *
- * @param pokemon The [Pokemon] object containing sprite URL and name metadata.
+ * @param model The [PokemonModel] containing the sprite URL and name.
  */
 @Composable
-fun PokemonImage(pokemon: Pokemon) {
-    pokemon.sprites.frontDefault?.let { spriteUrl ->
+fun PokemonImage(model: PokemonModel) {
+    PokemonUtils.getFrontSpriteUrl(model)?.let { spriteUrl ->
         AsyncImage(
             model = spriteUrl,
-            contentDescription = "${pokemon.name} sprite",
+            contentDescription = "${model.name} sprite",
             modifier = Modifier.size(256.dp)
         )
     }

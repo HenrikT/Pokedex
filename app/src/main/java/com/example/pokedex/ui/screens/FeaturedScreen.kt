@@ -8,7 +8,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
-import co.pokeapi.pokekotlin.model.Pokemon
 import com.example.pokedex.data.MyPokemonManager
 import com.example.pokedex.data.MyPokemonManager.isInMyPokemon
 import com.example.pokedex.data.PokemonService
@@ -39,16 +38,12 @@ fun FeaturedScreen() {
     val coroutineScope = rememberCoroutineScope()
 
     // Load Pokémon + Pokédex entry on random ID change
-    val pokemonWithEntryState =
-        produceState<Pair<Pokemon, String>?>(initialValue = null, key1 = randomId) {
-            value = PokemonService.getPokemonWithEntry(randomId)
-        }
-
-    val pokemonWithEntry = pokemonWithEntryState.value
+    val allPokemonModels = remember { PokemonService.getAllModels() }
+    val pokemon = allPokemonModels[randomId]
 
     // Check if Pokémon is already caught when data changes
-    LaunchedEffect(pokemonWithEntry?.first?.id) {
-        pokemonWithEntry?.first?.id?.let { id ->
+    LaunchedEffect(pokemon.id) {
+        pokemon.id.let { id ->
             isCaught = isInMyPokemon(context, id)
         }
     }
@@ -59,49 +54,42 @@ fun FeaturedScreen() {
             .padding(16.dp)
             .testTag("FeaturedScreen")
     ) {
-
-        if (pokemonWithEntry != null) {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.SpaceBetween
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            // Show a pokémon card at the top with name, sprite, types, and pokédex entry
+            PokemonCard(
+                pokemon = pokemon,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp, bottom = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                // Show a pokémon card at the top with name, sprite, types, and pokédex entry
-                PokemonCard(
-                    pokemon = pokemonWithEntry.first,
-                    entry = pokemonWithEntry.second,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                )
+                // Show a die button to reroll the random pokémon
+                DieButton {
+                    randomId = Random.nextInt(startNumber, endNumber)
+                }
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 16.dp, bottom = 8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    // Show a die button to reroll the random pokémon
-                    DieButton {
-                        randomId = Random.nextInt(startNumber, endNumber)
-                    }
-
-                    // Show a poke ball button to catch (favorite) the encountered pokémon
-                    PokeBallButton(
-                        isCaught = isCaught,
-                        onToggleCatch = {
-                            pokemonWithEntry.first.id.let { id ->
-                                coroutineScope.launch {
-                                    MyPokemonManager.toggleMyPokemon(context, id)
-                                    isCaught = isInMyPokemon(context, id)
-                                }
+                // Show a poke ball button to catch (favorite) the encountered pokémon
+                PokeBallButton(
+                    isCaught = isCaught,
+                    onToggleCatch = {
+                        pokemon.let { it ->
+                            coroutineScope.launch {
+                                MyPokemonManager.toggleMyPokemon(context, it.id)
+                                isCaught = isInMyPokemon(context, it.id)
                             }
                         }
-                    )
-                }
+                    }
+                )
             }
-        } else {
-            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
     }
 }

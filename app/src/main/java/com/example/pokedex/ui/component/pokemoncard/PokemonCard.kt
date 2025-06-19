@@ -11,22 +11,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import co.pokeapi.pokekotlin.model.Pokemon
+import com.example.pokedex.model.PokemonModel
 import com.example.pokedex.ui.component.PokemonImage
 import com.example.pokedex.util.PokemonUtils
 
 /**
- * Card layout that displays the Pokémon's name, ID, and front sprite.
+ * Card layout that displays a Pokémon's name, ID, and front-facing sprite.
  *
- * Used on the home screen to visually present the currently selected Pokémon.
- * This card occupies all available vertical space above the control buttons.
+ * Used on the home screen and detail views to visually present Pokémon information.
+ * This card occupies all available vertical space above the control buttons or below lists.
  *
- * @param pokemon The [Pokemon] model containing ID, name, and image URL.
+ * @param pokemon The [PokemonModel] containing simplified data for rendering.
+ * @param modifier Layout modifier applied to the card.
  */
 @Composable
-fun PokemonCard(pokemon: Pokemon, entry: String, modifier: Modifier) {
-
-    // Get the background color for the card
+fun PokemonCard(pokemon: PokemonModel, modifier: Modifier = Modifier) {
     val typeNames = pokemon.types.map { it.type.name }
     val backgroundBrush = PokemonUtils.getTypeBackground(typeNames)
 
@@ -44,15 +43,9 @@ fun PokemonCard(pokemon: Pokemon, entry: String, modifier: Modifier) {
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
-                // Show the name and number of the pokémon
                 PokemonCardNameHeader(pokemon)
-
-                // Show the pokémon image
                 PokemonImage(pokemon)
-
-                // Show the info box
-                PokemonCardInfoBox(pokemon, entry)
+                PokemonCardInfoBox(pokemon)
             }
         }
     }
