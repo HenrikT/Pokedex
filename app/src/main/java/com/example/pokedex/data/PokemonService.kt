@@ -18,12 +18,6 @@ import kotlinx.coroutines.sync.withLock
  */
 object PokemonService : IPokemonService {
 
-    /** In-memory cache of detailed Pokémon data keyed by Pokédex ID. */
-    private val pokemonCache = mutableMapOf<Int, Pokemon>()
-
-    /** In-memory cache of Pokémon species data keyed by species ID. */
-    private val speciesCache = mutableMapOf<Int, PokemonSpecies>()
-
     /** In-memory cache of [PokemonModel]s used for UI components and quick access. */
     private val modelCache = mutableListOf<PokemonModel>()
 
@@ -32,17 +26,9 @@ object PokemonService : IPokemonService {
 
     override fun getAllModels(): List<PokemonModel> = modelCache.sortedBy { it.id }
 
-    override suspend fun getPokemon(id: Int): Pokemon? {
-        return pokemonCache[id] ?: PokemonRepository.getPokemon(id)?.also {
-            pokemonCache[id] = it
-        }
-    }
+    override suspend fun getPokemon(id: Int): Pokemon? = PokemonRepository.getPokemon(id)
 
-    override suspend fun getSpecies(id: Int): PokemonSpecies? {
-        return speciesCache[id] ?: PokemonRepository.getSpecies(id)?.also {
-            speciesCache[id] = it
-        }
-    }
+    override suspend fun getSpecies(id: Int): PokemonSpecies? = PokemonRepository.getSpecies(id)
 
     override suspend fun getModel(id: Int): PokemonModel? {
         val pokemon = PokemonRepository.getPokemon(id) ?: return null

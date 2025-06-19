@@ -32,18 +32,4 @@ object PokemonRepository : IPokemonRepository {
             null
         }
     }
-
-    override suspend fun getPokemonWithEntry(id: Int): Pair<Pokemon, String>? {
-        val pokemon = getPokemon(id) ?: return null
-        val species = getSpecies(pokemon.species.id) ?: return null
-
-        val entry = species.flavorTextEntries
-            .firstOrNull { it.language.name == "en" }
-            ?.flavorText
-            ?.replace("\n", " ")
-            ?.replace("\u000c", " ")
-            ?: "No entry found"
-
-        return pokemon to entry
-    }
 }

@@ -26,14 +26,4 @@ interface IPokemonRepository {
      * @return A [PokemonSpecies] instance, or `null` if the request fails.
      */
     suspend fun getSpecies(id: Int): PokemonSpecies?
-
-    /**
-     * Retrieves the Pokémon object and its English Pokédex entry.
-     *
-     * Typically used to extract a custom Pokémon model along with its flavor text for UI display.
-     *
-     * @param id The Pokédex ID of the Pokémon.
-     * @return A pair containing the Pokémon and its flavor text entry, or `null` if either fails.
-     */
-    suspend fun getPokemonWithEntry(id: Int): Pair<Pokemon, String>?
 }
