@@ -45,7 +45,7 @@ object PokemonService : IPokemonService {
         cacheLock.withLock {
             modelCache.clear()
 
-            val batchSize = 50
+            val batchSize = 25
             val ids = (1..total).toList()
 
             // Load Pokémon in small chunks to reduce memory pressure and avoid API rate limits
