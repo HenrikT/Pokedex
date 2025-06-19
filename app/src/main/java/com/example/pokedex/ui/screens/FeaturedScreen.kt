@@ -1,62 +1,51 @@
 package com.example.pokedex.ui.screens
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.layout.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import com.example.pokedex.data.MyPokemonManager.catchPokemon
 import com.example.pokedex.data.MyPokemonManager.isCaught
+import com.example.pokedex.data.MyPokemonManager.isCaughtShiny
 import com.example.pokedex.data.MyPokemonManager.toggleCaught
 import com.example.pokedex.data.PokemonService
 import com.example.pokedex.ui.component.button.DieButton
 import com.example.pokedex.ui.component.button.PokeBallButton
 import com.example.pokedex.ui.component.pokemoncard.PokemonCard
 import com.example.pokedex.util.PokemonUtils.MAX_POKEMON_ID
+import com.example.pokedex.util.PokemonUtils.isShinyEncounter
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
-/**
- * Featured screen that shows one fun Pokémon at a time.
- *
- * Lets the user discover a random Pokémon and mark it as a favorite.
- * Meant to surprise and entertain with new creatures on each visit.
- */
 @Composable
 fun FeaturedScreen() {
     val context = LocalContext.current
     val startNumber = 1
     val endNumber = MAX_POKEMON_ID
 
-    // Only generate this once (on app start)
     val initialRandomId = remember { Random.nextInt(startNumber, endNumber) }
     var randomId by remember { mutableIntStateOf(initialRandomId) }
+
+    var isShinyMap by remember { mutableStateOf(mapOf<Int, Boolean>()) }
     var isCaught by remember { mutableStateOf(false) }
+    var isShiny by remember { mutableStateOf(false) }
 
     val coroutineScope = rememberCoroutineScope()
-
-    // Load Pokémon + Pokédex entry on random ID change
     val allPokemonModels = remember { PokemonService.getAllModels() }
     val pokemon = allPokemonModels.firstOrNull { it.id == randomId }
 
-    // Check if Pokémon is already caught when data changes
     LaunchedEffect(pokemon?.id) {
         pokemon?.id?.let { id ->
             isCaught = isCaught(context, id)
+            isShiny = if (isCaught) {
+                isCaughtShiny(context, id)
+            } else {
+                val shiny = isShinyMap[id] ?: isShinyEncounter().also { isShinyMap = isShinyMap + (id to it) }
+                shiny
+            }
         }
     }
 
@@ -70,15 +59,16 @@ fun FeaturedScreen() {
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            // Show a pokémon card at the top with name, sprite, types, and pokédex entry
             pokemon?.let {
                 PokemonCard(
                     pokemon = it,
+                    isShiny = isShiny,
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
                 )
             }
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -86,18 +76,16 @@ fun FeaturedScreen() {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Show a die button to reroll the random pokémon
                 DieButton {
                     randomId = Random.nextInt(startNumber, endNumber)
                 }
 
-                // Show a poke ball button to catch (favorite) the encountered pokémon
                 PokeBallButton(
                     isCaught = isCaught,
                     onToggleCatch = {
                         pokemon?.let {
                             coroutineScope.launch {
-                                toggleCaught(context, it.id)
+                                toggleCaught(context, pokemon.id, isShiny)
                                 isCaught = isCaught(context, it.id)
                             }
                         }

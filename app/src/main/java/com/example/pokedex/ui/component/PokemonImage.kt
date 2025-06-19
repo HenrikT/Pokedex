@@ -17,10 +17,16 @@ import com.example.pokedex.util.PokemonUtils
  * @param model The [PokemonModel] containing the sprite URL and name.
  */
 @Composable
-fun PokemonImage(model: PokemonModel) {
-    PokemonUtils.getFrontSpriteUrl(model)?.let { spriteUrl ->
+fun PokemonImage(model: PokemonModel, isShiny: Boolean) {
+    val spriteUrl = if (isShiny) {
+        PokemonUtils.getShinyFrontSpriteUrl(model)
+    } else {
+        PokemonUtils.getFrontSpriteUrl(model)
+    }
+
+    spriteUrl?.let {
         AsyncImage(
-            model = spriteUrl,
+            model = it,
             contentDescription = "${model.name} sprite",
             modifier = Modifier.size(256.dp)
         )

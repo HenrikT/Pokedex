@@ -29,6 +29,7 @@ import com.example.pokedex.util.PokemonUtils.getFrontSpriteUrl
 import com.example.pokedex.util.PokemonUtils.getId
 import com.example.pokedex.util.PokemonUtils.getName
 import com.example.pokedex.util.PokemonUtils.getTypeBackground
+import com.example.pokedex.util.PokemonUtils.getShinyFrontSpriteUrl
 
 /**
  * Displays a compact tile card for a Pokémon with name, ID, and sprite.
@@ -39,9 +40,10 @@ import com.example.pokedex.util.PokemonUtils.getTypeBackground
  *
  * @param navController The navigation controller used to open the Pokémon detail page.
  * @param pokemon The [PokemonModel] instance to render in this tile.
+ * @param isShiny Whether to display the shiny sprite for this Pokémon.
  */
 @Composable
-fun PokemonTile(navController: NavController, pokemon: PokemonModel) {
+fun PokemonTile(navController: NavController, pokemon: PokemonModel, isShiny: Boolean) {
     val typeNames = pokemon.types.map { it.type.name }
     val background = getTypeBackground(typeNames)
 
@@ -79,8 +81,14 @@ fun PokemonTile(navController: NavController, pokemon: PokemonModel) {
 
                 Spacer(modifier = Modifier.height(4.dp))
 
+                val spriteUrl = if (isShiny) {
+                    getShinyFrontSpriteUrl(pokemon)
+                } else {
+                    getFrontSpriteUrl(pokemon)
+                }
+
                 Image(
-                    painter = rememberAsyncImagePainter(getFrontSpriteUrl(pokemon)),
+                    painter = rememberAsyncImagePainter(spriteUrl),
                     contentDescription = "${getName(pokemon)} image",
                     modifier = Modifier
                         .fillMaxWidth()

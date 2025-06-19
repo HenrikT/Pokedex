@@ -25,7 +25,7 @@ import com.example.pokedex.util.PokemonUtils.PokemonCardContainerBackground
  * @param pokemon The [PokemonModel] whose name and ID should be shown.
  */
 @Composable
-fun PokemonCardNameHeader(pokemon: PokemonModel) {
+fun PokemonCardNameHeader(pokemon: PokemonModel, isShiny: Boolean) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -37,7 +37,7 @@ fun PokemonCardNameHeader(pokemon: PokemonModel) {
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = PokemonUtils.getFormattedPokemonName(pokemon),
+            text = PokemonUtils.getFormattedPokemonName(pokemon, isShiny),
             color = Color.White,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold

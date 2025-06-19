@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import co.pokeapi.pokekotlin.model.PokemonSpeciesFlavorText
 import com.example.pokedex.model.PokemonModel
+import kotlin.random.Random
 
 /**
  * Utility class for Pokémon-related operations and constants.
@@ -49,6 +50,18 @@ object PokemonUtils {
     }
 
     /**
+     * Returns the shiny front-facing sprite URL for a given Pokémon model.
+     *
+     * This method safely extracts the shiny front sprite from a [PokemonModel].
+     *
+     * @param model The Pokémon to extract the shiny image URL from.
+     * @return A URL string to the shiny front sprite, or `null` if not available.
+     */
+    fun getShinyFrontSpriteUrl(model: PokemonModel): String? {
+        return model.spriteUrls.frontShiny
+    }
+
+    /**
      * Returns the PokémonDetail's name with the first letter capitalized.
      */
     fun getName(pokemon: PokemonModel): String {
@@ -63,10 +76,18 @@ object PokemonUtils {
     }
 
     /**
-     * Formats the PokémonDetail's name with its ID in the form: "Swellow #277".
+     * Formats the Pokémon's name and ID, optionally with a shiny star prefix.
+     *
+     * If the Pokémon is shiny, a "★" is added before the name.
+     * Example output: "★ Swellow #277" or "Swellow #277"
+     *
+     * @param pokemon The [PokemonModel] to format.
+     * @param isShiny Whether the shiny star should be prefixed.
+     * @return A formatted string with optional shiny indicator.
      */
-    fun getFormattedPokemonName(pokemon: PokemonModel): String {
-        return "${getName(pokemon)} ${getId(pokemon)}"
+    fun getFormattedPokemonName(pokemon: PokemonModel, isShiny: Boolean = false): String {
+        val star = if (isShiny) "★ " else ""
+        return "$star${getName(pokemon)} ${getId(pokemon)}"
     }
 
     /**
@@ -132,6 +153,17 @@ object PokemonUtils {
                 )
             )
         }
+    }
+
+    /**
+     * Returns true with a 1 in 10 chance to simulate shiny Pokémon encounters.
+     *
+     * Can be used whenever a random Pokémon is shown to determine if it is shiny.
+     *
+     * @return `true` if the encounter should be shiny, `false` otherwise.
+     */
+    fun isShinyEncounter(): Boolean {
+        return Random.nextInt(10) == 0
     }
 
     /**

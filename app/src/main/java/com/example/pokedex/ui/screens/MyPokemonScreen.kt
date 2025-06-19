@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.pokedex.data.MyPokemonManager
 import com.example.pokedex.data.PokemonService
+import com.example.pokedex.data.parseCaughtId
 import com.example.pokedex.model.PokemonModel
 import com.example.pokedex.ui.component.pokemontile.PokemonTile
 
@@ -45,7 +46,7 @@ fun MyPokemonScreen(navController: NavController) {
     val context = LocalContext.current
 
     var myPokemon by remember { mutableStateOf<Set<String>>(emptySet()) }
-    var pokemonList by remember { mutableStateOf<List<PokemonModel>>(emptyList()) }
+    var pokemonList by remember { mutableStateOf<List<Pair<PokemonModel, Boolean>>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
 
     // Load and watch the user's caught Pokémon
@@ -54,8 +55,13 @@ fun MyPokemonScreen(navController: NavController) {
             myPokemon = idSet
 
             if (idSet.isNotEmpty()) {
-                val fetched = idSet.mapNotNull { idStr ->
-                    PokemonService.getModel(idStr.toInt())
+                val fetched = idSet.mapNotNull { raw ->
+                    val parsed = parseCaughtId(raw)
+                    parsed?.let { idWithFlag ->
+                        PokemonService.getModel(idWithFlag.id)?.let { model ->
+                            model to idWithFlag.isShiny
+                        }
+                    }
                 }
                 pokemonList = fetched
             } else {
@@ -97,8 +103,8 @@ fun MyPokemonScreen(navController: NavController) {
                         verticalArrangement = Arrangement.spacedBy(12.dp),
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        items(pokemonList) { pokemon ->
-                            PokemonTile(navController, pokemon)
+                        items(pokemonList) { (pokemon, isShiny) ->
+                            PokemonTile(navController, pokemon, isShiny = isShiny)
                         }
                     }
                 }

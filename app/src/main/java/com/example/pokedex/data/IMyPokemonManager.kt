@@ -6,7 +6,8 @@ import kotlinx.coroutines.flow.Flow
 /**
  * Abstraction for managing a user's caught Pokémon collection.
  *
- * Provides utility methods for checking, updating, and observing caught Pokémon.
+ * Provides utility methods for checking, updating, and observing caught Pokémon,
+ * including optional support for shiny status.
  */
 interface IMyPokemonManager {
 
@@ -28,12 +29,22 @@ interface IMyPokemonManager {
     suspend fun isCaught(context: Context, pokemonId: Int): Boolean
 
     /**
-     * Catches the given Pokémon.
+     * Checks whether the given Pokémon is caught as shiny.
+     *
+     * @param context The application context used to access the DataStore.
+     * @param pokemonId The Pokémon's numeric ID.
+     * @return `true` if the shiny variant is caught, `false` otherwise.
+     */
+    suspend fun isCaughtShiny(context: Context, pokemonId: Int): Boolean
+
+    /**
+     * Catches the given Pokémon, optionally as shiny.
      *
      * @param context The application context used to access the DataStore.
      * @param pokemonId The Pokémon's numeric ID to add.
+     * @param isShiny Whether the caught variant is shiny.
      */
-    suspend fun catchPokemon(context: Context, pokemonId: Int)
+    suspend fun catchPokemon(context: Context, pokemonId: Int, isShiny: Boolean = false)
 
     /**
      * Releases the given Pokémon.
@@ -51,5 +62,5 @@ interface IMyPokemonManager {
      * @param context The application context used to access the DataStore.
      * @param pokemonId The Pokémon's numeric ID to toggle.
      */
-    suspend fun toggleCaught(context: Context, pokemonId: Int)
+    suspend fun toggleCaught(context: Context, pokemonId: Int, isShiny: Boolean)
 }
