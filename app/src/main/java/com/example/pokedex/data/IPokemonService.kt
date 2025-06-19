@@ -43,7 +43,7 @@ interface IPokemonService {
      * in the UI without fetching data multiple times.
      *
      * @param id The national Pokédex ID of the Pokémon.
-     * @return A [PokemonModel] containing name, sprite, types, and raw flavor texts, or `null` if not found.
+     * @return A [PokemonModel] containing name, sprite and types, or `null` if not found.
      */
     suspend fun getModel(id: Int): PokemonModel?
 

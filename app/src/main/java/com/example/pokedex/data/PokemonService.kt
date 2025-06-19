@@ -32,14 +32,12 @@ object PokemonService : IPokemonService {
 
     override suspend fun getModel(id: Int): PokemonModel? {
         val pokemon = PokemonRepository.getPokemon(id) ?: return null
-        val species = getSpecies(pokemon.species.id) ?: return null
 
         return PokemonModel(
             id = pokemon.id,
             name = pokemon.name,
             spriteUrls = pokemon.sprites,
             types = pokemon.types,
-            flavorTextEntries = species.flavorTextEntries
         )
     }
 
@@ -62,7 +60,6 @@ object PokemonService : IPokemonService {
                                     name = it.name,
                                     types = it.types,
                                     spriteUrls = it.spriteUrls,
-                                    flavorTextEntries = it.flavorTextEntries
                                 )
                             }
                         }

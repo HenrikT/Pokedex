@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.pokedex.model.PokemonModel
+import com.example.pokedex.ui.component.FlavorTextBox
 import com.example.pokedex.util.PokemonUtils
 import com.example.pokedex.util.PokemonUtils.PokemonCardContainerBackground
 
@@ -21,7 +22,7 @@ import com.example.pokedex.util.PokemonUtils.PokemonCardContainerBackground
  * Used inside [PokemonCard] to show type badges and a flavor text description.
  * The card features a styled background to improve structure and readability.
  *
- * @param pokemon The [PokemonModel] providing type and flavor text information.
+ * @param pokemon The [PokemonModel] providing type and ID information.
  */
 @Composable
 fun PokemonCardInfoBox(pokemon: PokemonModel) {
@@ -39,7 +40,7 @@ fun PokemonCardInfoBox(pokemon: PokemonModel) {
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             PokemonTypeRow(pokemon)
-            PokemonEntryText(PokemonUtils.getEnglishFlavorText(pokemon.flavorTextEntries))
+            FlavorTextBox(pokemon.id)
         }
     }
 }
