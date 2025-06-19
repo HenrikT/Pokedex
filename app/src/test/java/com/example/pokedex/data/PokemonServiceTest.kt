@@ -1,5 +1,6 @@
 package com.example.pokedex.data
 
+import com.example.pokedex.util.PokemonUtils.getEnglishFlavorText
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.*
 import org.junit.Before
@@ -18,41 +19,32 @@ class PokemonServiceTest {
 
     @Test
     fun getAllModels_returnsEmptyByDefault() {
-        val summaries = service.getAllModels()
-        assertTrue(summaries.isEmpty())
+        val models = service.getAllModels()
+        assertTrue(models.isEmpty())
     }
 
     @Test
-    fun preloadSummaries_populatesListCorrectly() = runTest {
+    fun preloadModels_populatesListCorrectly() = runTest {
         val progress = mutableListOf<Int>()
 
         service.preloadModelsWithProgress(total = 1) {
             progress.add(it)
         }
 
-        val summaries = service.getAllModels()
-        assertEquals(1, summaries.size)
-        assertEquals("bulbasaur", summaries.first().name)
+        val models = service.getAllModels()
+        assertEquals(1, models.size)
+        assertEquals("bulbasaur", models.first().name)
         assertTrue(progress.contains(1))
     }
 
     @Test
-    fun getPokemonDetail_returnsExpectedModel() = runTest {
-        val detail = service.getModel(1)
+    fun getModel_returnsExpectedModel() = runTest {
+        val model = service.getModel(1)
 
-        assertNotNull(detail)
-        assertEquals(1, detail!!.id)
-        assertEquals("bulbasaur", detail.name)
-        assertTrue(detail.spriteUrl.contains("bulba"))
-    }
-
-    @Test
-    fun getPokemonWithEntry_returnsValidPair() = runTest {
-        val pair = service.getPokemonWithEntry(1)
-
-        assertNotNull(pair)
-        assertEquals("bulbasaur", pair!!.first.name)
-        assertTrue(pair.second.contains("seed"))
+        assertNotNull(model)
+        assertEquals(1, model!!.id)
+        assertEquals("bulbasaur", model.name)
+        assertTrue(model.spriteUrls.frontDefault?.contains("bulba") == true)
     }
 
     @Test
@@ -61,5 +53,14 @@ class PokemonServiceTest {
 
         assertNotNull(pokemon)
         assertEquals("bulbasaur", pokemon!!.name)
+    }
+
+    @Test
+    fun getSpecies_returnsSpeciesWithExpectedFlavorText() = runTest {
+        val species = service.getSpecies(1)
+
+        assertNotNull(species)
+        val entry = getEnglishFlavorText(species!!.flavorTextEntries)
+        assertTrue(entry.contains("seed", ignoreCase = true))
     }
 }

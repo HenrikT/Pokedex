@@ -21,34 +21,27 @@ class FakePokemonService(
 
     override suspend fun getSpecies(id: Int): PokemonSpecies? = fakeRepo.getSpecies(id)
 
-    override suspend fun getPokemonWithEntry(id: Int): Pair<Pokemon, String>? =
-        fakeRepo.getPokemonWithEntry(id)
+    override suspend fun getModel(id: Int): PokemonModel? {
+        val pokemon = fakeRepo.getPokemon(id) ?: return null
+        val species = fakeRepo.getSpecies(pokemon.species.id) ?: return null
+
+        return PokemonModel(
+            id = pokemon.id,
+            name = pokemon.name,
+            spriteUrls = pokemon.sprites,
+            types = pokemon.types,
+            flavorTextEntries = species.flavorTextEntries
+        )
+    }
 
     override suspend fun preloadModelsWithProgress(total: Int, onProgress: (Int) -> Unit) {
         summaries.clear()
         for (id in 1..total) {
-            val poke = fakeRepo.getPokemon(id)
-            poke?.let {
-                summaries.add(
-                    PokemonModel(
-                        id = it.id,
-                        name = it.name,
-                        spriteUrl = it.sprites.frontDefault ?: "",
-                        types = it.types
-                    )
-                )
+            val model = getModel(id)
+            if (model != null) {
+                summaries.add(model)
                 onProgress(summaries.size)
             }
         }
-    }
-
-    override suspend fun getModel(id: Int): PokemonModel? {
-        val poke = fakeRepo.getPokemon(id) ?: return null
-        return PokemonModel(
-            id = poke.id,
-            name = poke.name,
-            spriteUrl = poke.sprites.frontDefault ?: return null,
-            types = poke.types
-        )
     }
 }

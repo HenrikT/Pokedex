@@ -70,7 +70,7 @@ class FakePokemonRepository : IPokemonRepository {
             isDefault = true,
             order = 1,
             weight = 69,
-            species = NamedApiResource("bulbasaur", "1"),
+            species = NamedApiResource(name = "bulbasaur", url = "https://pokeapi.co/api/v2/pokemon-species/1/"),
             abilities = emptyList(),
             forms = emptyList(),
             gameIndices = emptyList(),
