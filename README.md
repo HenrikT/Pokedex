@@ -16,21 +16,24 @@ This project leverages:
 ## ✨ Features
 
 - 🎲 **Featured Screen**: Discover a random Pokémon on app launch, complete with flavor text and catch button.
+  - ✨ The featured Pokémon is preserved across tab switches using `rememberSaveable`.
+- 🌟 **Shiny Mode**: Catch shiny Pokémon based on probability and toggle shiny state using persistent storage.
 - 📚 **Pokédex**: Browse and search all Pokémon using fuzzy matching.
 - ❤️ **My Pokémon**: View your favorite caught Pokémon in a simple 2-column layout.
 - 🔍 **Detail View**: Get detailed info for each Pokémon including types and description.
+  - 📝 Flavor text is lazily loaded from species data on demand, improving performance and reducing memory usage.
 
 ## 📦 Technologies Used
 
-| Category         | Tech                                          |
-| ---------------- | --------------------------------------------- |
-| Language         | Kotlin (JVM target 11)                        |
-| UI               | Jetpack Compose (Material3)                   |
-| Navigation       | `androidx.navigation.compose`                 |
-| Image Loading    | [Coil](https://github.com/coil-kt/coil)       |
-| Data Persistence | Jetpack DataStore (Preferences)               |
-| API              | [PokeAPI via PokeKotlin](https://pokeapi.co/) |
-| Testing          | JUnit, MockK, kotlinx.coroutines test         |
+| Category         | Tech                                                                                                 |
+| ---------------- | ---------------------------------------------------------------------------------------------------- |
+| Language         | Kotlin (JVM target 11)                                                                               |
+| UI               | Jetpack Compose (Material3)                                                                          |
+| Navigation       | `androidx.navigation.compose`                                                                        |
+| Image Loading    | [Coil](https://github.com/coil-kt/coil)                                                              |
+| Data Persistence | Jetpack DataStore (Preferences)                                                                      |
+| API              | [PokéAPI](https://pokeapi.co/) (main REST API) + [PokeKotlin](https://pokeapi.github.io/pokekotlin/) |
+| Testing          | JUnit, MockK, kotlinx.coroutines test                                                                |
 
 ## 🏃 Getting Started
 
@@ -48,6 +51,8 @@ This project leverages:
 3. Run the `:app` module on an emulator or physical device
 
 Data is loaded on first app launch using `PokemonService.preloadModelsWithProgress()`, then cached in-memory for fast retrieval.
+
+To reduce memory usage, flavor text is no longer preloaded. It is fetched dynamically when needed.
 
 ## 🧪 Testing
 
