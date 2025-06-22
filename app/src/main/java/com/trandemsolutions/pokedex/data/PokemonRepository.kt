@@ -4,16 +4,21 @@ import co.pokeapi.pokekotlin.PokeApi
 import co.pokeapi.pokekotlin.model.Pokemon
 import co.pokeapi.pokekotlin.model.PokemonSpecies
 import com.trandemsolutions.pokedex.util.ILogger
-import com.trandemsolutions.pokedex.util.Logger
+import javax.inject.Inject
 
 /**
  * Repository for retrieving Pokémon data from the PokéAPI.
  *
- * All requests are safe and return null on failure, with errors logged.
+ * This implementation wraps the network calls and provides
+ * null-safe access with error logging.
+ *
+ * It is injected using Hilt and used by higher-level services like [IPokemonService].
+ *
+ * @param logger A logger abstraction for error tracking, useful for testing and flexibility.
  */
-object PokemonRepository : IPokemonRepository {
-
-    var logger: ILogger = Logger
+class PokemonRepository @Inject constructor(
+    private val logger: ILogger
+) : IPokemonRepository {
 
     override suspend fun getPokemon(id: Int): Pokemon? {
         return try {

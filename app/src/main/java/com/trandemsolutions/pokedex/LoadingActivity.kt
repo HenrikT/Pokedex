@@ -23,11 +23,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
-import com.trandemsolutions.pokedex.data.PokemonService
+import com.trandemsolutions.pokedex.data.IPokemonService
 import com.trandemsolutions.pokedex.ui.theme.PokedexTheme
 import com.trandemsolutions.pokedex.util.PokemonUtils.MAX_POKEMON_ID
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * Initial splash/loading screen shown on app startup.
@@ -35,12 +37,16 @@ import kotlinx.coroutines.launch
  * Preloads all Pokémon summaries in the background while showing a progress bar.
  * Once loading completes, the user is navigated to [MainActivity].
  */
+@AndroidEntryPoint
 class LoadingActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var pokemonService: IPokemonService
 
     /**
      * Begins the preload process and sets up the splash screen UI.
      *
-     * Uses [PokemonService.preloadModelsWithProgress] to download Pokémon metadata
+     * Uses [IPokemonService.preloadModelsWithProgress] to download Pokémon metadata
      * and show incremental progress on screen.
      */
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,7 +63,7 @@ class LoadingActivity : ComponentActivity() {
 
             // Launch loading in background and update progress as we go
             lifecycleScope.launch {
-                PokemonService.preloadModelsWithProgress(total) { loaded ->
+                pokemonService.preloadModelsWithProgress(total) { loaded ->
                     loadedCount = loaded
                 }
 

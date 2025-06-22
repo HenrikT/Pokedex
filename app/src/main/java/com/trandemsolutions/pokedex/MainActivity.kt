@@ -20,6 +20,7 @@ import com.trandemsolutions.pokedex.ui.screens.MyPokemonScreen
 import com.trandemsolutions.pokedex.ui.screens.PokedexScreen
 import com.trandemsolutions.pokedex.ui.screens.PokemonDetailScreen
 import com.trandemsolutions.pokedex.ui.theme.PokedexTheme
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * The main entry point of the application after the splash screen.
@@ -27,6 +28,7 @@ import com.trandemsolutions.pokedex.ui.theme.PokedexTheme
  * Sets up the navigation graph, bottom navigation bar, and intercepts system back button
  * to preserve in-memory state like the Pokémon cache.
  */
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     /**

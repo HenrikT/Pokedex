@@ -9,14 +9,21 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * High-level service for accessing Pokémon data.
  *
- * This singleton manages caching and retrieval of Pokémon and species details,
+ * This class manages caching and retrieval of Pokémon and species details,
  * and provides preloading capabilities for PokémonModel instances used in the UI.
+ *
+ * Registered as a singleton via Hilt to enable testability and decoupled access.
  */
-object PokemonService : IPokemonService {
+@Singleton
+class PokemonService @Inject constructor(
+    private val repository: IPokemonRepository
+) : IPokemonService {
 
     /** In-memory cache of [PokemonModel]s used for UI components and quick access. */
     private val modelCache = mutableListOf<PokemonModel>()
@@ -26,12 +33,12 @@ object PokemonService : IPokemonService {
 
     override fun getAllModels(): List<PokemonModel> = modelCache.sortedBy { it.id }
 
-    override suspend fun getPokemon(id: Int): Pokemon? = PokemonRepository.getPokemon(id)
+    override suspend fun getPokemon(id: Int): Pokemon? = repository.getPokemon(id)
 
-    override suspend fun getSpecies(id: Int): PokemonSpecies? = PokemonRepository.getSpecies(id)
+    override suspend fun getSpecies(id: Int): PokemonSpecies? = repository.getSpecies(id)
 
     override suspend fun getModel(id: Int): PokemonModel? {
-        val pokemon = PokemonRepository.getPokemon(id) ?: return null
+        val pokemon = repository.getPokemon(id) ?: return null
 
         return PokemonModel(
             id = pokemon.id,

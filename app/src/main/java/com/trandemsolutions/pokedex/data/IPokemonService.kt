@@ -7,8 +7,10 @@ import com.trandemsolutions.pokedex.model.PokemonModel
 /**
  * Interface for accessing Pokémon data.
  *
- * Exposes core methods for retrieving full Pokémon data, species metadata, and the [PokemonModel] used in the UI.
- * Also supports preloading for performance optimization.
+ * This abstraction allows multiple implementations and is injected using Hilt.
+ * It provides core methods for retrieving full Pokémon data, species metadata,
+ * and lightweight models used in the UI. Also supports background preloading
+ * with progress tracking for performance-critical flows.
  */
 interface IPokemonService {
 
