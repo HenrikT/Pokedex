@@ -4,6 +4,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.navigation.compose.rememberNavController
+import com.trandemsolutions.pokedex.ui.screens.pokemondetail.PokemonDetailScreen
 import com.trandemsolutions.pokedex.ui.theme.PokedexTheme
 import org.junit.Rule
 import org.junit.Test
