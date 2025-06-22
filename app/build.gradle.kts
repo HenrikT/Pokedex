@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.pokedex"
+    namespace = "com.trandemsolutions.pokedex"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.pokedex"
+        applicationId = "com.trandemsolutions.pokedex"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
