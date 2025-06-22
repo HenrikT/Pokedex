@@ -15,7 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.trandemsolutions.pokedex.ui.navigation.BottomNavBar
 import com.trandemsolutions.pokedex.ui.navigation.BottomNavItem
-import com.trandemsolutions.pokedex.ui.screens.FeaturedScreen
+import com.trandemsolutions.pokedex.ui.screens.featured.FeaturedScreen
 import com.trandemsolutions.pokedex.ui.screens.MyPokemonScreen
 import com.trandemsolutions.pokedex.ui.screens.PokedexScreen
 import com.trandemsolutions.pokedex.ui.screens.PokemonDetailScreen

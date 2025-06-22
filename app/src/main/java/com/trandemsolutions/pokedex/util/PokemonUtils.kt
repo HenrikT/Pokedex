@@ -15,10 +15,15 @@ import kotlin.random.Random
 object PokemonUtils {
 
     /** The highest known National Dex ID for a Pokémon (Gen 9). */
-    const val MAX_POKEMON_ID = 1025
+    const val MAX_POKEMON_ID = 151
 
     /** Background color used in Pokémon card containers. */
     val PokemonCardContainerBackground = Color(0x7A5E5E5E)
+
+    /**
+     * Generates a random pokémon ID.
+     */
+    fun generateRandomId(): Int = Random.nextInt(1, MAX_POKEMON_ID + 1)
 
     /**
      * Returns the first English flavor text from a list of entries.
