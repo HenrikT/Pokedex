@@ -1,4 +1,4 @@
-package com.trandemsolutions.pokedex.ui.screens
+package com.trandemsolutions.pokedex.ui.screens.mypokemon
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -14,10 +14,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -25,51 +23,31 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.trandemsolutions.pokedex.data.MyPokemonManager
-import com.trandemsolutions.pokedex.data.PokemonService
-import com.trandemsolutions.pokedex.data.parseCaughtId
-import com.trandemsolutions.pokedex.model.PokemonModel
 import com.trandemsolutions.pokedex.ui.component.pokemontile.PokemonTile
 
 /**
  * Displays a grid of Pokémon that the user has caught ("My Pokémon").
  *
  * This screen:
- * - Observes the user's saved Pokémon via a flow.
- * - Loads each corresponding [PokemonModel] object using cached detail data.
+ * - Observes the user's saved Pokémon via [MyPokemonViewModel].
  * - Renders them in a 2-column grid layout using [PokemonTile].
  * - Shows a spinner while loading or a fallback message if the list is empty.
+ *
+ * @param navController The navigation controller used to open Pokémon details.
+ * @param viewModel The ViewModel backing this screen.
  */
 @Composable
-fun MyPokemonScreen(navController: NavController) {
+fun MyPokemonScreen(
+    navController: NavController,
+    viewModel: MyPokemonViewModel = hiltViewModel()
+) {
     val context = LocalContext.current
+    val uiState by viewModel.uiState.collectAsState()
 
-    var myPokemon by remember { mutableStateOf<Set<String>>(emptySet()) }
-    var pokemonList by remember { mutableStateOf<List<Pair<PokemonModel, Boolean>>>(emptyList()) }
-    var isLoading by remember { mutableStateOf(true) }
-
-    // Load and watch the user's caught Pokémon
     LaunchedEffect(Unit) {
-        MyPokemonManager.getCaughtPokemon(context).collect { idSet ->
-            myPokemon = idSet
-
-            if (idSet.isNotEmpty()) {
-                val fetched = idSet.mapNotNull { raw ->
-                    val parsed = parseCaughtId(raw)
-                    parsed?.let { idWithFlag ->
-                        PokemonService.getModel(idWithFlag.id)?.let { model ->
-                            model to idWithFlag.isShiny
-                        }
-                    }
-                }
-                pokemonList = fetched
-            } else {
-                pokemonList = emptyList()
-            }
-
-            isLoading = false
-        }
+        viewModel.observeCaughtPokemon(context)
     }
 
     Box(
@@ -80,11 +58,11 @@ fun MyPokemonScreen(navController: NavController) {
             .testTag("MyPokemonScreen")
     ) {
         when {
-            isLoading -> {
+            uiState.isLoading -> {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
 
-            pokemonList.isEmpty() -> {
+            uiState.pokemonList.isEmpty() -> {
                 Text(
                     text = "No Pokémon caught yet",
                     modifier = Modifier
@@ -103,7 +81,10 @@ fun MyPokemonScreen(navController: NavController) {
                         verticalArrangement = Arrangement.spacedBy(12.dp),
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        items(pokemonList) { (pokemon, isShiny) ->
+                        items(
+                            items = uiState.pokemonList,
+                            key = { it.first.id }
+                        ) { (pokemon, isShiny) ->
                             PokemonTile(navController, pokemon, isShiny = isShiny)
                         }
                     }
