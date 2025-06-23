@@ -8,32 +8,44 @@ This project leverages:
 
 - Modern **Jetpack Compose** for UI
 - **Kotlin** and **Coroutines** for asynchronous logic
+- **MVVM architecture** using ViewModels for state management
+- **Hilt** for dependency injection and testability
 - **DataStore** for persistent state (e.g., "My Pokémon")
 - **PokeKotlin** client library for API integration
 - **Coil** for image loading
-- Test-friendly architecture with abstraction and in-memory caching
+- In-memory caching and a clean separation of concerns for performance
 
 ## ✨ Features
 
 - 🎲 **Featured Screen**: Discover a random Pokémon on app launch, complete with flavor text and catch button.
-  - ✨ The featured Pokémon is preserved across tab switches using `rememberSaveable`.
 - 🌟 **Shiny Mode**: Catch shiny Pokémon based on probability and toggle shiny state using persistent storage.
 - 📚 **Pokédex**: Browse and search all Pokémon using fuzzy matching.
 - ❤️ **My Pokémon**: View your favorite caught Pokémon in a simple 2-column layout.
 - 🔍 **Detail View**: Get detailed info for each Pokémon including types and description.
-  - 📝 Flavor text is lazily loaded from species data on demand, improving performance and reducing memory usage.
 
 ## 📦 Technologies Used
 
-| Category         | Tech                                                                                                 |
-| ---------------- | ---------------------------------------------------------------------------------------------------- |
-| Language         | Kotlin (JVM target 11)                                                                               |
-| UI               | Jetpack Compose (Material3)                                                                          |
-| Navigation       | `androidx.navigation.compose`                                                                        |
-| Image Loading    | [Coil](https://github.com/coil-kt/coil)                                                              |
-| Data Persistence | Jetpack DataStore (Preferences)                                                                      |
-| API              | [PokéAPI](https://pokeapi.co/) (main REST API) + [PokeKotlin](https://pokeapi.github.io/pokekotlin/) |
-| Testing          | JUnit, MockK, kotlinx.coroutines test                                                                |
+| Category             | Tech                                                                                                 |
+| -------------------- | ---------------------------------------------------------------------------------------------------- |
+| Language             | Kotlin (JVM target 11)                                                                               |
+| UI                   | Jetpack Compose (Material3)                                                                          |
+| Architecture         | MVVM (Model-View-ViewModel)                                                                          |
+| Dependency Injection | [Hilt](https://developer.android.com/training/dependency-injection/hilt-android)                     |
+| Navigation           | `androidx.navigation.compose`                                                                        |
+| Image Loading        | [Coil](https://github.com/coil-kt/coil)                                                              |
+| Data Persistence     | Jetpack DataStore (Preferences)                                                                      |
+| API                  | [PokéAPI](https://pokeapi.co/) (main REST API) + [PokeKotlin](https://pokeapi.github.io/pokekotlin/) |
+| Testing              | JUnit, MockK, kotlinx.coroutines test, AndroidX Compose Test                                         |
+
+## 🧱 Architecture
+
+The app is structured using **MVVM** with clearly separated responsibilities:
+
+- **Model**: Represents Pokémon data and API responses
+- **ViewModel**: Handles logic, caching, and state production for UI
+- **View (Compose)**: Reactively consumes state from ViewModel
+
+**Hilt** provides dependency injection throughout the app, allowing services and repositories to be easily injected and mocked during testing.
 
 ## 🏃 Getting Started
 
