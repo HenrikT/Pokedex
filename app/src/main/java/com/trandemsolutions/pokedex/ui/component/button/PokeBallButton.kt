@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.trandemsolutions.pokedex.R
@@ -55,6 +56,7 @@ fun PokeBallButton(
         shadowElevation = 6.dp,
         color = if (isCaught) Color(0xFFFFC107) else Color(0xFFB0BEC5),
         modifier = Modifier
+            .testTag("PokeBallButton")
             .padding(8.dp)
             .clickable {
                 playCatchAnimation()

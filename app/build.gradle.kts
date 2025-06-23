@@ -16,7 +16,7 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.trandemsolutions.pokedex.HiltTestRunner"
     }
 
     buildTypes {
@@ -44,6 +44,10 @@ android {
 
     defaultConfig {
         testInstrumentationRunner = "com.trandemsolutions.pokedex.HiltTestRunner"
+    }
+
+    testOptions {
+        unitTests.isIncludeAndroidResources = true
     }
 }
 
