@@ -64,9 +64,6 @@ fun PokemonDetailScreen(
                 PokemonCard(
                     pokemon = it,
                     isShiny = uiState.isShiny,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
                 )
             }
 

@@ -51,14 +51,18 @@ fun FeaturedScreen(viewModel: FeaturedViewModel = hiltViewModel()) {
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            uiState.pokemon?.let {
-                PokemonCard(
-                    pokemon = it,
-                    isShiny = uiState.isShiny,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                contentAlignment = Alignment.Center
+            ) {
+                uiState.pokemon?.let { pokemon ->
+                    PokemonCard(
+                        pokemon = pokemon,
+                        isShiny = uiState.isShiny
+                    )
+                }
             }
 
             Row(

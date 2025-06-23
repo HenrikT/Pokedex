@@ -130,7 +130,6 @@ class FeaturedViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 pokemonId = generateRandomId(),
-                pokemon = null
             )
         }
     }
